@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass=UtilisateurRepository::class)
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type_id", type="integer")
- * @ORM\DiscriminatorMap({1 ="AdminSysteme",2="Caissier",3="AdminAgence", 4="Utilisateur"})
+ * @ORM\DiscriminatorMap({1 ="AdminSysteme",2="Caissier",3="AdminAgence",4="UserAgence", 5="Utilisateur"})
  * @ApiResource (attributes={"route_prefix"="/adminSys"},
  *    itemOperations={"GET","PUT","DELETE"},
  *    collectionOperations={
@@ -22,6 +22,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *              "route_name"="adding",
  *              "method":"POST",
  *              "path":"/utilisateurs",
+ *              "access_control"="(is_granted('ROLE_AdminSysteme') )",
+ *              "access_control_message"="Vous n'avez pas access à cette Ressource",
  *          },"GET"
  *     }
  * )
@@ -86,10 +88,6 @@ class Utilisateur implements UserInterface
      */
     private ?Profil $profil;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Agence::class, inversedBy="utilisateurs")
-     */
-    private ?Agence $agence;
 
 
 
@@ -261,17 +259,6 @@ class Utilisateur implements UserInterface
         return $this;
     }
 
-    public function getAgence(): ?Agence
-    {
-        return $this->agence;
-    }
-
-    public function setAgence(?Agence $agence): self
-    {
-        $this->agence = $agence;
-
-        return $this;
-    }
 
 
 

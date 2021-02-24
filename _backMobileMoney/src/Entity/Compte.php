@@ -11,7 +11,42 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  *
  * @ORM\Entity(repositoryClass=CompteRepository::class)
- * @ApiResource(attributes={"security"="is_granted('ROLE_SUPERADMIN')"})
+ * @ApiResource(
+ *     itemOperations={
+    *           "updateCompte":{
+    *              "method":"PUT",
+    *              "path":"/adminSys/comptes/{id}",
+    *              "access_control"="(is_granted('ROLE_AdminSysteme')or is_granted('ROLE_Caissier')  )",
+    *              "access_control_message"="Vous n'avez pas access à cette Ressource",
+     *      },
+     *     "deleteCompte":{
+     *              "method":"DELETE",
+     *              "path":"/adminSys/comptes/{id}",
+     *              "access_control"="(is_granted('ROLE_AdminSysteme') )",
+     *              "access_control_message"="Vous n'avez pas access à cette Ressource",
+     *      },
+     *     "getOneCompte":{
+     *              "method":"GETE",
+     *              "path":"/adminSys/comptes/{id}",
+     *              "access_control"="(is_granted('ROLE_AdminSysteme') )",
+     *              "access_control_message"="Vous n'avez pas access à cette Ressource",
+     *      },
+ *     },
+ *     collectionOperations={
+     *       "addCompte":{
+     *              "method":"POST",
+     *              "path":"/adminSys/comptes",
+     *              "access_control"="(is_granted('ROLE_AdminSysteme') )",
+     *              "access_control_message"="Vous n'avez pas access à cette Ressource",
+     *      },
+     *      "getComptes":{
+     *              "method":"GET",
+     *              "path":"/adminSys/comptes",
+     *              "access_control"="(is_granted('ROLE_AdminSysteme') )",
+     *               "access_control_message"="Vous n'avez pas access à cette Ressource",
+     *       }
+ *     }
+ * )
  */
 class Compte
 {

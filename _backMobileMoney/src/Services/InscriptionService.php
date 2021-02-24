@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Entity\AdminAgence;
 use App\Entity\AdminSysteme;
 use App\Entity\Caissier;
+use App\Entity\UserAgence;
 use App\Entity\Utilisateur;
 use App\Repository\ProfilRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -59,6 +60,8 @@ class InscriptionService
             $user =AdminSysteme::class;
         }elseif ($profil == "Caissier"){
             $user =Caissier::class;
+        }elseif ($profil == "UserAgence"){
+            $user =UserAgence::class;
         }else{
             $user = Utilisateur::class;
         }

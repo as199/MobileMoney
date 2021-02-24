@@ -36,19 +36,21 @@ class Agence
      */
     private $status;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Utilisateur::class, mappedBy="agence")
-     */
-    private $utilisateurs;
+
 
     /**
      * @ORM\OneToOne(targetEntity=Compte::class, cascade={"persist", "remove"})
      */
     private $compte;
 
+    /**
+     * @ORM\OneToMany(targetEntity=UserAgence::class, mappedBy="agence")
+     */
+    private $userAgences;
+
     public function __construct()
     {
-        $this->utilisateurs = new ArrayCollection();
+        $this->userAgences = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -92,35 +94,7 @@ class Agence
         return $this;
     }
 
-    /**
-     * @return Collection|Utilisateur[]
-     */
-    public function getUtilisateurs(): Collection
-    {
-        return $this->utilisateurs;
-    }
 
-    public function addUtilisateur(Utilisateur $utilisateur): self
-    {
-        if (!$this->utilisateurs->contains($utilisateur)) {
-            $this->utilisateurs[] = $utilisateur;
-            $utilisateur->setAgence($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUtilisateur(Utilisateur $utilisateur): self
-    {
-        if ($this->utilisateurs->removeElement($utilisateur)) {
-            // set the owning side to null (unless already changed)
-            if ($utilisateur->getAgence() === $this) {
-                $utilisateur->setAgence(null);
-            }
-        }
-
-        return $this;
-    }
 
     public function getCompte(): ?Compte
     {
@@ -130,6 +104,36 @@ class Agence
     public function setCompte(?Compte $compte): self
     {
         $this->compte = $compte;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserAgence[]
+     */
+    public function getUserAgences(): Collection
+    {
+        return $this->userAgences;
+    }
+
+    public function addUserAgence(UserAgence $userAgence): self
+    {
+        if (!$this->userAgences->contains($userAgence)) {
+            $this->userAgences[] = $userAgence;
+            $userAgence->setAgence($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserAgence(UserAgence $userAgence): self
+    {
+        if ($this->userAgences->removeElement($userAgence)) {
+            // set the owning side to null (unless already changed)
+            if ($userAgence->getAgence() === $this) {
+                $userAgence->setAgence(null);
+            }
+        }
 
         return $this;
     }

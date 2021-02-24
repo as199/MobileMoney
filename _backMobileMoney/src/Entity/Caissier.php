@@ -9,7 +9,29 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *      itemOperations={
+     *     "listerCaissier":{
+     *              "method":"GET",
+     *              "path":"/adminSys/caissiers/{id}",
+     *              "access_control"="(is_granted('ROLE_AdminSysteme') )",
+     *              "access_control_message"="Vous n'avez pas access à cette Ressource",
+     *      },
+ *          "bloquerCaissier":{
+ *              "method":"DELETE",
+ *              "path":"/adminSys/caissiers/{id}",
+ *              "access_control"="(is_granted('ROLE_AdminSysteme') )",
+ *              "access_control_message"="Vous n'avez pas access à cette Ressource",
+ *      },
+ *     },
+ *     collectionOperations={
+ *      "getComptes":{
+ *              "method":"GET",
+ *              "path":"/adminSys/caissiers",
+ *              "access_control"="(is_granted('ROLE_AdminSysteme') )",
+ *               "access_control_message"="Vous n'avez pas access à cette Ressource",
+ *       }
+ *     })
  * @ORM\Entity(repositoryClass=CaissierRepository::class)
  */
 class Caissier extends Utilisateur

@@ -9,8 +9,22 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource()
  * @ORM\Entity(repositoryClass=TransactionRepository::class)
+ * * @ApiResource( itemOperations={"GET","PUT","DELETE"},
+ *    collectionOperations={
+ *        "addtransaction":{
+ *              "method":"POST",
+ *              "path":"/user/transactions",
+ *              "access_control"="(is_granted('ROLE_UserAgence') or is_granted('ROLE_AdminAgence') )",
+ *              "access_control_message"="Vous n'avez pas access à cette Ressource",
+ *          },
+ *      "getTransaction":{
+ *              "method":"GET",
+ *              "path":"/user/transactions",
+ *              "access_control"="(is_granted('ROLE_AdminSysteme') or is_granted('ROLE_AdminAgence') )",
+ *              "access_control_message"="Vous n'avez pas access à cette Ressource",
+ *          }
+ *     })
  */
 class Transaction
 {
