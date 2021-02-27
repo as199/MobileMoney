@@ -13,21 +13,23 @@ use Doctrine\ORM\Mapping as ORM;
  *      itemOperations={
      *     "listerCaissier":{
      *              "method":"GET",
-     *              "path":"/adminSys/caissiers/{id}",
+     *              "path":"/caissiers/{id}",
+     *              "normalization_context"={"groups":"caissier:read"},
      *              "access_control"="(is_granted('ROLE_AdminSysteme') )",
      *              "access_control_message"="Vous n'avez pas access à cette Ressource",
      *      },
  *          "bloquerCaissier":{
  *              "method":"DELETE",
- *              "path":"/adminSys/caissiers/{id}",
+ *              "path":"/caissiers/{id}",
  *              "access_control"="(is_granted('ROLE_AdminSysteme') )",
  *              "access_control_message"="Vous n'avez pas access à cette Ressource",
  *      },
  *     },
- *     collectionOperations={
+ *     collectionOperations={"POST",
  *      "getComptes":{
  *              "method":"GET",
- *              "path":"/adminSys/caissiers",
+ *              "path":"/caissiers",
+ *               "normalization_context"={"groups":"caissier:read"},
  *              "access_control"="(is_granted('ROLE_AdminSysteme') )",
  *               "access_control_message"="Vous n'avez pas access à cette Ressource",
  *       }

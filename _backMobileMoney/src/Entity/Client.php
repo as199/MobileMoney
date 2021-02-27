@@ -7,9 +7,13 @@ use App\Repository\ClientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     attributes={"security"="is_granted('ROLE_AdminSysteme')"},
+ *     normalizationContext={"groups"={"client:read"}}
+ *     )
  * @ORM\Entity(repositoryClass=ClientRepository::class)
  */
 class Client
@@ -18,26 +22,31 @@ class Client
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"client:read","transaction:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups ({"transaction:write","client:read","transaction:read"})
      */
     private $nomComplet;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
+     * @Groups ({"transaction:write","client:read","transaction:read"})
      */
     private $cni;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups ({"transaction:write","client:read","transaction:read"})
      */
     private $adresse;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups ({"transaction:write","client:read","transaction:read"})
      */
     private $telephone;
 
@@ -48,6 +57,7 @@ class Client
 
     /**
      * @ORM\ManyToMany(targetEntity=Transaction::class, inversedBy="clients")
+     * @Groups({"client:read"})
      */
     private $transaction;
 
@@ -73,12 +83,12 @@ class Client
         return $this;
     }
 
-    public function getCni(): ?int
+    public function getCni(): ?string
     {
         return $this->cni;
     }
 
-    public function setCni(int $cni): self
+    public function setCni(string $cni): self
     {
         $this->cni = $cni;
 

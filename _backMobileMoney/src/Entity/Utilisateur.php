@@ -7,7 +7,9 @@ use App\Repository\UtilisateurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -15,7 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type_id", type="integer")
  * @ORM\DiscriminatorMap({1 ="AdminSysteme",2="Caissier",3="AdminAgence",4="UserAgence", 5="Utilisateur"})
- * @ApiResource (attributes={"route_prefix"="/adminSys"},
+ * @ApiResource (attributes={"route_prefix"="/adminSys","security"="is_granted('ROLE_AdminSysteme')"},
  *    itemOperations={"GET","PUT","DELETE"},
  *    collectionOperations={
  *        "addUser":{
@@ -27,6 +29,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          },"GET"
  *     }
  * )
+ * * @UniqueEntity(fields="email", message="ce e-mail {{ value }} est féjà utilisé !")
+ * @UniqueEntity(fields="telephone", message="ce tele {{ value }} already being used.")
+
  */
 class Utilisateur implements UserInterface
 {
@@ -34,6 +39,7 @@ class Utilisateur implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"compte:read","caissier:read","adminAgence:read","transaction:read"})
      */
     private ?int $id;
 
@@ -42,6 +48,7 @@ class Utilisateur implements UserInterface
      * @Assert\NotBlank
      *  @Assert\Email(message = "The email '{{ value }}' is not a valid email.")
      * @Assert\NotBlank(message="please enter your E-mail")
+     * @Groups({"compte:read","caissier:read","adminAgence:read,"transaction:read""})
      */
     private ?string $email;
 
@@ -57,24 +64,28 @@ class Utilisateur implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="please enter your complete name")
+     * @Groups({"compte:read","caissier:read","adminAgence:read","transaction:read"})
      */
     private ?string $nomComplet;
 
     /**
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank(message="please enter your phone number")
+     * @Groups({"compte:read","caissier:read","adminAgence:read","transaction:read"})
      */
     private ?string $telephone;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="please enter your Adresse")
+     * @Groups({"compte:read","caissier:read","adminAgence:read","transaction:read"})
      */
     private ?string $Adresse;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="please enter your gender")
+     *  @Groups({"compte:read","caissier:read","adminAgence:read","transaction:read"})
      */
     private ?string $genre;
 
@@ -93,11 +104,13 @@ class Utilisateur implements UserInterface
 
     /**
      * @ORM\Column(type="blob", nullable=true)
+     *  @Groups({"compte:read","caissier:read"})
      */
     private $avatar;
 
     /**
      * @ORM\ManyToMany(targetEntity=Transaction::class, inversedBy="utilisateurs")
+     *
      */
     private $transaction;
 

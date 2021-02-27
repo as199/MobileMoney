@@ -7,6 +7,7 @@ use App\Repository\CompteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  *
@@ -14,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ApiResource(
  *     itemOperations={
     *           "updateCompte":{
+    *             "route_name"="updateCompte",
     *              "method":"PUT",
     *              "path":"/adminSys/comptes/{id}",
     *              "access_control"="(is_granted('ROLE_AdminSysteme')or is_granted('ROLE_Caissier')  )",
@@ -26,8 +28,9 @@ use Doctrine\ORM\Mapping as ORM;
      *              "access_control_message"="Vous n'avez pas access à cette Ressource",
      *      },
      *     "getOneCompte":{
-     *              "method":"GETE",
-     *              "path":"/adminSys/comptes/{id}",
+     *              "method":"GET",
+     *              "path":"/comptes/{id}",
+     *              "normalization_context"={"groups":"compte:read"},
      *              "access_control"="(is_granted('ROLE_AdminSysteme') )",
      *              "access_control_message"="Vous n'avez pas access à cette Ressource",
      *      },
@@ -35,6 +38,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     collectionOperations={
      *       "addCompte":{
      *              "method":"POST",
+ *                  "route_name"="addCompte",
      *              "path":"/adminSys/comptes",
      *              "access_control"="(is_granted('ROLE_AdminSysteme') )",
      *              "access_control_message"="Vous n'avez pas access à cette Ressource",
@@ -54,25 +58,30 @@ class Compte
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"compte:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"compte:read"})
      */
     private $numCompte;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"compte:read"})
      */
     private $solde;
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"compte:read"})
      */
     private $status;
 
     /**
      * @ORM\ManyToMany(targetEntity=Caissier::class, mappedBy="comptes")
+     * @Groups({"compte:read"})
      */
     private $caissiers;
 
@@ -81,9 +90,15 @@ class Compte
      */
     private $adminSysteme;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="compte")
+     */
+    private $transactions;
+
     public function __construct()
     {
         $this->caissiers = new ArrayCollection();
+        $this->transactions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -161,6 +176,36 @@ class Compte
     public function setAdminSysteme(?AdminSysteme $adminSysteme): self
     {
         $this->adminSysteme = $adminSysteme;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Transaction[]
+     */
+    public function getTransactions(): Collection
+    {
+        return $this->transactions;
+    }
+
+    public function addTransaction(Transaction $transaction): self
+    {
+        if (!$this->transactions->contains($transaction)) {
+            $this->transactions[] = $transaction;
+            $transaction->setCompte($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransaction(Transaction $transaction): self
+    {
+        if ($this->transactions->removeElement($transaction)) {
+            // set the owning side to null (unless already changed)
+            if ($transaction->getCompte() === $this) {
+                $transaction->setCompte(null);
+            }
+        }
 
         return $this;
     }

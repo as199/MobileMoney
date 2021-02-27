@@ -8,3 +8,13 @@ api_login_check:
 adding:
   path: /api/adminSys/utilisateurs
   controller: App\Controller\AdminSystemController::Adduser
+
+updateCompte:
+  path: /api/adminSys/comptes/{id}
+  controller: App\Controller\CompteController::UpdateCompte
+addTransaction:
+  path: /api/transactions
+  controller: App\Controller\TransactionController::AddCompte
+addCompte:
+  path: /api/adminSys/comptes
+  controller: App\Controller\CompteController::AddCompte

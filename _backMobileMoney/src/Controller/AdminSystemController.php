@@ -51,15 +51,15 @@ class AdminSystemController extends AbstractController
      * @Route("/api/adminSys/utilisateurs", name="adding",methods={"POST"})
      * @param InscriptionService $service
      * @param Request $request
+     * @return JsonResponse
      */
-    public function Adduser(InscriptionService $service, Request $request)
+    public function Adduser(InscriptionService $service, Request $request): JsonResponse
     {
         $type = $request->get('type'); //pour dynamiser
 
         $utilisateur = $service->NewUser($type,$request);
         $this->validator->ValidatePost($utilisateur) ;
         $this->manager->persist($utilisateur);
-        //dd($utilisateur);
         $this->manager->flush();
         return new JsonResponse("success", 200, [], true);
 

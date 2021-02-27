@@ -7,20 +7,24 @@ use App\Repository\TransactionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=TransactionRepository::class)
  * * @ApiResource( itemOperations={"GET","PUT","DELETE"},
  *    collectionOperations={
  *        "addtransaction":{
+ *              "route_name"="addTransaction",
  *              "method":"POST",
- *              "path":"/user/transactions",
+ *              "path":"/transactions",
+ *              "denormalizationContext"={"groups"={"transaction:write"}},
  *              "access_control"="(is_granted('ROLE_UserAgence') or is_granted('ROLE_AdminAgence') )",
  *              "access_control_message"="Vous n'avez pas access à cette Ressource",
  *          },
  *      "getTransaction":{
  *              "method":"GET",
- *              "path":"/user/transactions",
+ *              "path":"/transactions",
+ *              normalizationContext={"groups"={"transaction:read"}}
  *              "access_control"="(is_granted('ROLE_AdminSysteme') or is_granted('ROLE_AdminAgence') )",
  *              "access_control_message"="Vous n'avez pas access à cette Ressource",
  *          }
@@ -32,51 +36,62 @@ class Transaction
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"client:read","transaction:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"transaction:write","client:read","transaction:read"})
+     *
      */
     private $montant;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups ({"transaction:write","client:read","transaction:read"})
      */
     private $dateEnvoi;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups ({"transaction:write","client:read","transaction:read"})
      */
     private $dateRetrait;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups ({"transaction:write","client:read","transaction:read"})
      */
     private $dateAnnulation;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups ({"transaction:write","client:read","transaction:read"})
      */
     private $totalCommission;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups ({"transaction:write","client:read"})
      */
     private $commissionEtat;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups ({"transaction:write","client:read","transaction:read"})
      */
     private $commissionTransfere;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups ({"transaction:write","transaction:read"})
      */
     private $commissionDepot;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups ({"transaction:write","client:read","transaction:read"})
      */
     private $commissionRetrait;
 
@@ -89,13 +104,27 @@ class Transaction
 
     /**
      * @ORM\ManyToMany(targetEntity=Client::class, mappedBy="transaction")
+     * @Groups ({"transaction:write","transaction:read"})
      */
     private $clients;
 
     /**
      * @ORM\ManyToMany(targetEntity=Utilisateur::class, mappedBy="transaction")
+     * @Groups ({"transaction:write","transaction:read"})
      */
     private $utilisateurs;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     *  @Groups ({"transaction:write","transaction:read"})
+     */
+    private $type;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Compte::class, inversedBy="transactions")
+     *  @Groups ({"transaction:write","transaction:read"})
+     */
+    private $compte;
 
     public function __construct()
     {
@@ -280,6 +309,30 @@ class Transaction
         if ($this->utilisateurs->removeElement($utilisateur)) {
             $utilisateur->removeTransaction($this);
         }
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getCompte(): ?Compte
+    {
+        return $this->compte;
+    }
+
+    public function setCompte(?Compte $compte): self
+    {
+        $this->compte = $compte;
 
         return $this;
     }
