@@ -10,28 +10,46 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ *
  * @ORM\Entity(repositoryClass=AgenceRepository::class)
+ *  @ApiResource(
+ *      normalizationContext={"groups"={"agence:read"}},
+ *     itemOperations={
+ *     "get"={
+ *     "method":"GET","path":"/agences/{id}",
+ *     "normalizationContext"={"groups"={"agencex:read"}},
+ *          }
+ * ,"delete","put"},
+ *     collectionOperations={
+ *     "addAgence"={
+ *     "method":"POST",
+ *     "route_name"="addingAgence",
+ *     "path":"/agences"
+ *      },
+ *     "get"
+ * }
+ * )
  */
 class Agence
 {
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"adminAgence:read"})
+     * @Groups({"adminAgence:read","agence:read","user:read","agencex:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     *  @Groups({"adminAgence:read"})
+     *  @Groups({"adminAgence:read","user:read","agencex:read"})
      */
     private $nomAgence;
 
     /**
      * @ORM\Column(type="string", length=255)
-     *  @Groups({"adminAgence:read"})
+     *  @Groups({"adminAgence:read","agence:read","user:read"})
      */
     private $adresse;
 
@@ -44,11 +62,13 @@ class Agence
 
     /**
      * @ORM\OneToOne(targetEntity=Compte::class, cascade={"persist", "remove"})
+     * @Groups({"user:read","agence:read"})
      */
     private $compte;
 
     /**
      * @ORM\OneToMany(targetEntity=UserAgence::class, mappedBy="agence")
+     *  @Groups({"user:read","agence:read"})
      */
     private $userAgences;
 

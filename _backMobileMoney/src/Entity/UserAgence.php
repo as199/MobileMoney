@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UserAgenceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=UserAgenceRepository::class)
@@ -31,6 +32,7 @@ class UserAgence extends Utilisateur
 
     /**
      * @ORM\ManyToOne(targetEntity=Agence::class, inversedBy="userAgences")
+     * @Groups({"user:read"})
      */
     private $agence;
 

@@ -18,6 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\DiscriminatorColumn(name="type_id", type="integer")
  * @ORM\DiscriminatorMap({1 ="AdminSysteme",2="Caissier",3="AdminAgence",4="UserAgence", 5="Utilisateur"})
  * @ApiResource (attributes={"route_prefix"="/adminSys","security"="is_granted('ROLE_AdminSysteme')"},
+ *     normalizationContext={"groups"={"user:read"}},
  *    itemOperations={"GET","PUT","DELETE"},
  *    collectionOperations={
  *        "addUser":{
@@ -39,7 +40,7 @@ class Utilisateur implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"compte:read","caissier:read","adminAgence:read","transaction:read"})
+     * @Groups({"compte:read","user:read","caissier:read","adminAgence:read","transaction:read"})
      */
     private ?int $id;
 
@@ -48,7 +49,8 @@ class Utilisateur implements UserInterface
      * @Assert\NotBlank
      *  @Assert\Email(message = "The email '{{ value }}' is not a valid email.")
      * @Assert\NotBlank(message="please enter your E-mail")
-     * @Groups({"compte:read","caissier:read","adminAgence:read,"transaction:read""})
+     * @Groups({"compte:read","user:read","caissier:read","adminAgence:read","transaction:read"})
+     *
      */
     private ?string $email;
 
@@ -64,28 +66,28 @@ class Utilisateur implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="please enter your complete name")
-     * @Groups({"compte:read","caissier:read","adminAgence:read","transaction:read"})
+     * @Groups({"compte:read","user:read","caissier:read","adminAgence:read","transaction:read"})
      */
     private ?string $nomComplet;
 
     /**
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank(message="please enter your phone number")
-     * @Groups({"compte:read","caissier:read","adminAgence:read","transaction:read"})
+     * @Groups({"compte:read","user:read","caissier:read","adminAgence:read","transaction:read"})
      */
     private ?string $telephone;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="please enter your Adresse")
-     * @Groups({"compte:read","caissier:read","adminAgence:read","transaction:read"})
+     * @Groups({"compte:read","user:read","caissier:read","adminAgence:read","transaction:read"})
      */
     private ?string $Adresse;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="please enter your gender")
-     *  @Groups({"compte:read","caissier:read","adminAgence:read","transaction:read"})
+     *  @Groups({"compte:read","user:read","caissier:read","adminAgence:read","transaction:read"})
      */
     private ?string $genre;
 
@@ -96,6 +98,7 @@ class Utilisateur implements UserInterface
 
     /**
      * @ORM\ManyToOne(targetEntity=Profil::class, inversedBy="utilisateurs")
+     * @Groups ({"user:read"})
      */
     private ?Profil $profil;
 
@@ -104,7 +107,7 @@ class Utilisateur implements UserInterface
 
     /**
      * @ORM\Column(type="blob", nullable=true)
-     *  @Groups({"compte:read","caissier:read"})
+     *  @Groups({"compte:read","user:read","caissier:read"})
      */
     private $avatar;
 
@@ -114,9 +117,21 @@ class Utilisateur implements UserInterface
      */
     private $transaction;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Depot::class, mappedBy="utilisateur")
+     */
+    private $depots;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="userEnvoi")
+     */
+    private $transactions;
+
     public function __construct()
     {
         $this->transaction = new ArrayCollection();
+        $this->depots = new ArrayCollection();
+        $this->transactions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -313,5 +328,43 @@ class Utilisateur implements UserInterface
         $this->transaction->removeElement($transaction);
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Depot[]
+     */
+    public function getDepots(): Collection
+    {
+        return $this->depots;
+    }
+
+    public function addDepot(Depot $depot): self
+    {
+        if (!$this->depots->contains($depot)) {
+            $this->depots[] = $depot;
+            $depot->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDepot(Depot $depot): self
+    {
+        if ($this->depots->removeElement($depot)) {
+            // set the owning side to null (unless already changed)
+            if ($depot->getUtilisateur() === $this) {
+                $depot->setUtilisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Transaction[]
+     */
+    public function getTransactions(): Collection
+    {
+        return $this->transactions;
     }
 }

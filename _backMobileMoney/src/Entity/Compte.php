@@ -58,19 +58,19 @@ class Compte
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"compte:read"})
+     * @Groups({"compte:read","user:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"compte:read"})
+     * @Groups({"compte:read","user:read"})
      */
     private $numCompte;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"compte:read"})
+     * @Groups({"compte:read","user:read"})
      */
     private $solde;
     /**
@@ -95,10 +95,16 @@ class Compte
      */
     private $transactions;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Depot::class, mappedBy="compte")
+     */
+    private $depots;
+
     public function __construct()
     {
         $this->caissiers = new ArrayCollection();
         $this->transactions = new ArrayCollection();
+        $this->depots = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -204,6 +210,36 @@ class Compte
             // set the owning side to null (unless already changed)
             if ($transaction->getCompte() === $this) {
                 $transaction->setCompte(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Depot[]
+     */
+    public function getDepots(): Collection
+    {
+        return $this->depots;
+    }
+
+    public function addDepot(Depot $depot): self
+    {
+        if (!$this->depots->contains($depot)) {
+            $this->depots[] = $depot;
+            $depot->setCompte($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDepot(Depot $depot): self
+    {
+        if ($this->depots->removeElement($depot)) {
+            // set the owning side to null (unless already changed)
+            if ($depot->getCompte() === $this) {
+                $depot->setCompte(null);
             }
         }
 

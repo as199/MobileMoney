@@ -5,16 +5,15 @@ namespace App\DataPersiter;
 
 
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
+use App\Entity\Agence;
 use App\Entity\Compte;
-use App\Entity\Transaction;
-use App\Services\CalculFraisService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 
-final class TransactionDataPersister implements ContextAwareDataPersisterInterface
+final class AgenceDataPersister implements ContextAwareDataPersisterInterface
 {
     /**
      * @var EntityManagerInterface
@@ -28,41 +27,29 @@ final class TransactionDataPersister implements ContextAwareDataPersisterInterfa
      * @var TokenStorageInterface
      */
     private TokenStorageInterface $tokenStorage;
-    /**
-     * @var CalculFraisService
-     */
-    private CalculFraisService $fraisService;
 
 
-    public function __construct(EntityManagerInterface $manager,TokenStorageInterface $tokenStorage, CalculFraisService $fraisService)
+    public function __construct(EntityManagerInterface $manager,TokenStorageInterface $tokenStorage)
     {
         $this->manager=$manager;
         $this->tokenStorage = $tokenStorage;
-        $this->fraisService = $fraisService;
-
+        
 
     }
     public function supports($data, array $context = []): bool
     {
-        return $data instanceof Transaction;
+        return $data instanceof Agence;
     }
 
     public function persist($data, array $context = []): object
     {
 
 
-       $totalFrais = $this->fraisService->CalcFrais($data->getMontant());
-        //dd($totalFrais);
-        $tarif = $this->fraisService->CalcPart($totalFrais);
-        $data->setTotalCommission($totalFrais);
-        $data->setCommissionEtat($tarif['etat']);
-        dd($data);
-
-
     }
 
     public function remove($data, array $context = []): JsonResponse
     {
+        dd($data);
         $data->setStatus(true);
         $this->manager->persist($data);
         $this->manager->flush();

@@ -11,7 +11,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=TransactionRepository::class)
- * * @ApiResource( itemOperations={"GET","PUT","DELETE"},
+ * * @ApiResource( itemOperations={"GET","PUT",
+ *     "deleteTransaction":{
+ *              "route_name"="deleteTransaction",
+ *              "method":"DELETE",
+ *              "path":"/transactions/{id}",
+ *              "denormalizationContext"={"groups"={"transaction:write"}},
+ *              "access_control"="(is_granted('ROLE_UserAgence') or is_granted('ROLE_AdminAgence') )",
+ *              "access_control_message"="Vous n'avez pas access à cette Ressource",
+ *          },
+ * },
  *    collectionOperations={
  *        "addtransaction":{
  *              "route_name"="addTransaction",
@@ -24,7 +33,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *      "getTransaction":{
  *              "method":"GET",
  *              "path":"/transactions",
- *              normalizationContext={"groups"={"transaction:read"}}
+ *              "normalizationContext"={"groups"={"transaction:read"}},
  *              "access_control"="(is_granted('ROLE_AdminSysteme') or is_granted('ROLE_AdminAgence') )",
  *              "access_control_message"="Vous n'avez pas access à cette Ressource",
  *          }
@@ -101,13 +110,6 @@ class Transaction
     private $status;
 
 
-
-    /**
-     * @ORM\ManyToMany(targetEntity=Client::class, mappedBy="transaction")
-     * @Groups ({"transaction:write","transaction:read"})
-     */
-    private $clients;
-
     /**
      * @ORM\ManyToMany(targetEntity=Utilisateur::class, mappedBy="transaction")
      * @Groups ({"transaction:write","transaction:read"})
@@ -125,6 +127,31 @@ class Transaction
      *  @Groups ({"transaction:write","transaction:read"})
      */
     private $compte;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $numero;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="transactions")
+     */
+    private $clientEnvoi;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="transactions")
+     */
+    private $clientRecepteur;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="transactions")
+     */
+    private $userEnvoi;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="transactions")
+     */
+    private $userRetrait;
 
     public function __construct()
     {
@@ -259,32 +286,11 @@ class Transaction
     }
 
 
-    /**
-     * @return Collection|Client[]
-     */
-    public function getClients(): Collection
-    {
-        return $this->clients;
-    }
 
-    public function addClient(Client $client): self
-    {
-        if (!$this->clients->contains($client)) {
-            $this->clients[] = $client;
-            $client->addTransaction($this);
-        }
 
-        return $this;
-    }
 
-    public function removeClient(Client $client): self
-    {
-        if ($this->clients->removeElement($client)) {
-            $client->removeTransaction($this);
-        }
 
-        return $this;
-    }
+
 
     /**
      * @return Collection|Utilisateur[]
@@ -336,5 +342,66 @@ class Transaction
 
         return $this;
     }
+
+    public function getNumero(): ?string
+    {
+        return $this->numero;
+    }
+
+    public function setNumero(string $numero): self
+    {
+        $this->numero = $numero;
+
+        return $this;
+    }
+
+    public function getClientEnvoi(): ?Client
+    {
+        return $this->clientEnvoi;
+    }
+
+    public function setClientEnvoi(?Client $clientEnvoi): self
+    {
+        $this->clientEnvoi = $clientEnvoi;
+
+        return $this;
+    }
+
+    public function getClientRecepteur(): ?Client
+    {
+        return $this->clientRecepteur;
+    }
+
+    public function setClientRecepteur(?Client $clientRecepteur): self
+    {
+        $this->clientRecepteur = $clientRecepteur;
+
+        return $this;
+    }
+
+    public function getUserEnvoi(): ?Utilisateur
+    {
+        return $this->userEnvoi;
+    }
+
+    public function setUserEnvoi(?Utilisateur $userEnvoi): self
+    {
+        $this->userEnvoi = $userEnvoi;
+
+        return $this;
+    }
+
+    public function getUserRetrait(): ?Utilisateur
+    {
+        return $this->userRetrait;
+    }
+
+    public function setUserRetrait(?Utilisateur $userRetrait): self
+    {
+        $this->userRetrait = $userRetrait;
+
+        return $this;
+    }
+
 
 }

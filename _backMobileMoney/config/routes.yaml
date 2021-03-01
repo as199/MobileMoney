@@ -14,7 +14,16 @@ updateCompte:
   controller: App\Controller\CompteController::UpdateCompte
 addTransaction:
   path: /api/transactions
-  controller: App\Controller\TransactionController::AddCompte
+  controller: App\Controller\TransactionController::AddTransaction
 addCompte:
   path: /api/adminSys/comptes
   controller: App\Controller\CompteController::AddCompte
+addingAgence:
+  path: /api/agences
+  controller: App\Controller\AgenceController::AddAgence
+deleteTransaction:
+  path: /api/transactions/{id}
+  controller: App\Controller\TransactionController::DeleteTransaction
+addDepot:
+  path: /api/depots
+  controller: App\Controller\DepotController::ADDdepot

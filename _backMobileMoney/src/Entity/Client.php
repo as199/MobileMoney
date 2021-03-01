@@ -61,9 +61,15 @@ class Client
      */
     private $transaction;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="clientEnvoi")
+     */
+    private $transactions;
+
     public function __construct()
     {
         $this->transaction = new ArrayCollection();
+        $this->transactions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -153,5 +159,13 @@ class Client
         $this->transaction->removeElement($transaction);
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Transaction[]
+     */
+    public function getTransactions(): Collection
+    {
+        return $this->transactions;
     }
 }
