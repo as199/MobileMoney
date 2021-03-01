@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Client;
 use App\Entity\Transaction;
 use App\Repository\AgenceRepository;
+use App\Repository\ClientRepository;
 use App\Repository\CompteRepository;
 use App\Repository\TransactionRepository;
 use App\Services\CalculFraisService;
@@ -53,6 +54,10 @@ class TransactionController extends AbstractController
      * @var SerializerInterface
      */
     private SerializerInterface $serializer;
+    /**
+     * @var ClientRepository
+     */
+    private ClientRepository $clientRepository;
 
     /**
      * TransactionController constructor.
@@ -65,13 +70,14 @@ class TransactionController extends AbstractController
      * @param CompteRepository $compteRepository
      * @param AgenceRepository $agenceRepository
      * @param SerializerInterface $serializer
+     * @param ClientRepository $clientRepository
      */
     public function __construct(EntityManagerInterface $manager,CalculFraisService $calculFraisService,
                                 TokenStorageInterface $tokenStorage,
                                 GenererNum $generator,
                                 TransactionRepository $transactionRepository,
                                 CompteRepository $compteRepository, AgenceRepository $agenceRepository,
-                                SerializerInterface $serializer
+                                SerializerInterface $serializer,ClientRepository $clientRepository
     )
     {
 
@@ -83,6 +89,7 @@ class TransactionController extends AbstractController
         $this->compteRepository = $compteRepository;
         $this->transactionRepository = $transactionRepository;
         $this->serializer = $serializer;
+        $this->clientRepository = $clientRepository;
     }
 
     /**
@@ -104,10 +111,18 @@ class TransactionController extends AbstractController
             if($data['montant'] > $compte->getSolde()){
                 return new JsonResponse("Impossible d'effectuer le depot", 400, [], true);
             }
-         $clientEnvoi = $this->serializer->denormalize($data['clientenvoi'], Client::class);
-         $clientEnvoi->setStatus(false);
-         $clientRetrait = $this->serializer->denormalize($data['clientRetrait'], Client::class);
-         $clientRetrait->setStatus(false);
+            if($resp = $this->clientRepository->findOneBy(['telephone'=>$data['clientenvoi']['telephone']])){
+                $clientEnvoi = $resp;
+            }else{
+                $clientEnvoi = $this->serializer->denormalize($data['clientenvoi'], Client::class);
+                $clientEnvoi->setStatus(false);
+            }
+            if($resp = $this->clientRepository->findOneBy(['telephone'=>$data['clientRetrait']['telephone']])){
+                $clientRetrait = $resp;
+            }else{
+                $clientRetrait = $this->serializer->denormalize($data['clientRetrait'], Client::class);
+                $clientRetrait->setStatus(false);
+            }
 
          $totalFrais = $this->calculFraisService->CalcFrais($data['montant']);
         $tarif = $this->calculFraisService->CalcPart($totalFrais);
@@ -151,9 +166,12 @@ class TransactionController extends AbstractController
             }
 
     }
+
+
+
         $this->manager->persist($transaction);
         $this->manager->flush();
-        return new JsonResponse($transaction, 200, [], true);
+        return new JsonResponse("transaction effectuer avec succé", 200, [], true);
 
     }
 
