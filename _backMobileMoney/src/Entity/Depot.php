@@ -4,19 +4,22 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\DepotRepository;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  *
  * @ORM\Entity(repositoryClass=DepotRepository::class)
  * @ApiResource(
- *     itemOperations={"GET","PUT","DELETE"},
+ *     itemOperations={"GET","PUT","deleteDepot"={
+ *     "method":"DELETE",
+ *     "path": "/depots/{id}",
+ *     "route_name":"deleteDepot",
+ *     "access_control"="(is_granted('ROLE_AdminSysteme') or  is_granted('ROLE_Caissier'))"
+ *      }
+ *      },
  *     collectionOperations={"GET",
- *     "addDepot"={
- *      "method":"POST",
- *     "path": "/depots",
- *     "route_name":"addDepot"
- *     }
+ *     "addDepot"={"method":"POST","path": "/depots","route_name":"addDepot","access_control"="(is_granted('ROLE_AdminSysteme') or is_granted('ROLE_Caissier') )",}
  *     }
  * )
  */
@@ -54,12 +57,12 @@ class Depot
         return $this->id;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 

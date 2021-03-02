@@ -22,8 +22,11 @@ addingAgence:
   path: /api/agences
   controller: App\Controller\AgenceController::AddAgence
 deleteTransaction:
-  path: /api/transactions/{id}
+  path: /api/transactions/delete
   controller: App\Controller\TransactionController::DeleteTransaction
 addDepot:
   path: /api/depots
   controller: App\Controller\DepotController::ADDdepot
+deleteDepot:
+    path: /api/depots/{id}
+    controller: App\Controller\DepotController::Deletedepot

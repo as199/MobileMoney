@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class TransactionController extends AbstractController
@@ -96,6 +97,7 @@ class TransactionController extends AbstractController
      * @Route("/api/transactions", name="addTransaction", methods={"POST"})
      * @param Request $request
      * @return Response
+     * @throws ExceptionInterface
      */
     public function AddTransaction(Request $request): Response
     {
@@ -144,23 +146,28 @@ class TransactionController extends AbstractController
         $transaction->setType($data['type']);
         $transaction->setCompte($compte);
         $transaction->setStatus(false);
-        $compte->setSolde($compte->getSolde() - $data['montant'] );
+        $compte->setSolde($compte->getSolde() - $data['montant'] + $tarif['Depot']);
     }elseif ($data['type'] === 'retrait'){
             $transaction = $this->transactionRepository->findOneBy(['numero'=>$data['numero']]);
 
-            if ($transaction->getDateRetrait() === null){
-                if ($transaction->getClientRecepteur()->getTelephone() === $data['client']['telephone']){
-                    $compte = $this->compteRepository->findOneBy(['id'=>$transaction->getCompte()->getId()]);
-                        $compte->setSolde($compte->getSolde() + $transaction->getMontant());
+            if ($transaction->getDateRetrait() === null ){
+                if ($transaction->getDateAnnulation()=== null){
+                    if ($transaction->getClientRecepteur()->getTelephone() === $data['client']['telephone']){
+                        $compte = $this->compteRepository->findOneBy(['id'=>$transaction->getCompte()->getId()]);
+                        $compte->setSolde($compte->getSolde() + $transaction->getMontant()+$transaction->getTotalCommission());
                         $transaction->setDateRetrait(new \DateTime('now'));
                         $transaction->setUserRetrait($user);
                         $this->manager->persist($transaction);
                         $this->manager->flush();
                         return new JsonResponse("Ce transfert a  été retirer avec succè ", 200, [], true);
 
+                    }else{
+                        return new JsonResponse("Ce transfert n'est pas destiner à ce numero de telephone ", 400, [], true);
+                    }
                 }else{
-                    return new JsonResponse("Ce transfert n'est pas destiner à ce numero de telephone ", 400, [], true);
+                    return new JsonResponse("Ce transfert a été annulé", 400, [], true);
                 }
+
             }else{
                 return new JsonResponse("Ce transfert a déja été retirer ", 400, [], true);
             }
@@ -175,19 +182,31 @@ class TransactionController extends AbstractController
 
     }
 
-    public function DeleteTransaction($id,Request $request): JsonResponse
+    public function DeleteTransaction(Request $request): JsonResponse
     {
-        $data =  json_decode($request->getContent(),true);
-        $transaction = $this->transactionRepository->findOneBy(['id'=>$id]);
-      if(isset($data['type']) && $data['type']==='annuler'){
+        $data = json_decode($request->getContent(), true);
+        $transaction = $this->transactionRepository->findOneBy(['numero'=>$data['numero']]);
+        $idAgenceEnvoi = $transaction->getUserEnvoi()->getAgence()->getId();
+        $idAgenceAnnulation = $this->tokenStorage->getToken()->getUser()->getAgence()->getId();
+        if($idAgenceAnnulation === $idAgenceEnvoi){
+            if($transaction->getDateRetrait()=== null){
+                if($transaction->getDateAnnulation()=== null){
+                    $transaction->setDateAnnulation(new \DateTime);
+                    $compte = $transaction->getCompte();
+                    $compte->setSolde($compte->getSolde() + $transaction->getMontant());
+                    $this->manager->persist($transaction);
+                    $this->manager->flush();
+                    return new JsonResponse(" transaction annulle  avec succée", 200, [], true);
 
-          $transaction->setDateAnnulation(new \DateTime);
+                }else{
+                    return new JsonResponse("Impossible d'annuler le depot car celle ci a deja ete annuler", 400, [], true);
+                }
 
-      }else{
-          $transaction->setStatus(true);
-      }
-        $this->manager->persist($transaction);
-        $this->manager->flush();
-        return new JsonResponse("success", 200, [], true);
+            }else{
+                return new JsonResponse("Impossible d'annuler le depot car l,argent a été déja retirer", 400, [], true);
+            }
+        }else{
+            return new JsonResponse("Impossible d'annuler le depot car la transaction n'as pas été effectuer dans cette agence", 400, [], true);
+        }
     }
 }

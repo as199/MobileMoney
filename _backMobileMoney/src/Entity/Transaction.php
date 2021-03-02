@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     "deleteTransaction":{
  *              "route_name"="deleteTransaction",
  *              "method":"DELETE",
- *              "path":"/transactions/{id}",
+ *              "path":"/transactions/delete",
  *              "denormalizationContext"={"groups"={"transaction:write"}},
  *              "access_control"="(is_granted('ROLE_UserAgence') or is_granted('ROLE_AdminAgence') )",
  *              "access_control_message"="Vous n'avez pas access à cette Ressource",

@@ -67,14 +67,15 @@ class Agence
     private $compte;
 
     /**
-     * @ORM\OneToMany(targetEntity=UserAgence::class, mappedBy="agence")
-     *  @Groups({"user:read","agence:read"})
+     * @ORM\OneToMany(targetEntity=Utilisateur::class, mappedBy="agence")
      */
-    private $userAgences;
+    private $utilisateurs;
+
+
 
     public function __construct()
     {
-        $this->userAgences = new ArrayCollection();
+        $this->utilisateurs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -133,32 +134,34 @@ class Agence
     }
 
     /**
-     * @return Collection|UserAgence[]
+     * @return Collection|Utilisateur[]
      */
-    public function getUserAgences(): Collection
+    public function getUtilisateurs(): Collection
     {
-        return $this->userAgences;
+        return $this->utilisateurs;
     }
 
-    public function addUserAgence(UserAgence $userAgence): self
+    public function addUtilisateur(Utilisateur $utilisateur): self
     {
-        if (!$this->userAgences->contains($userAgence)) {
-            $this->userAgences[] = $userAgence;
-            $userAgence->setAgence($this);
+        if (!$this->utilisateurs->contains($utilisateur)) {
+            $this->utilisateurs[] = $utilisateur;
+            $utilisateur->setAgence($this);
         }
 
         return $this;
     }
 
-    public function removeUserAgence(UserAgence $userAgence): self
+    public function removeUtilisateur(Utilisateur $utilisateur): self
     {
-        if ($this->userAgences->removeElement($userAgence)) {
+        if ($this->utilisateurs->removeElement($utilisateur)) {
             // set the owning side to null (unless already changed)
-            if ($userAgence->getAgence() === $this) {
-                $userAgence->setAgence(null);
+            if ($utilisateur->getAgence() === $this) {
+                $utilisateur->setAgence(null);
             }
         }
 
         return $this;
     }
+
+
 }

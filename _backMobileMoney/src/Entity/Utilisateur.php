@@ -127,6 +127,11 @@ class Utilisateur implements UserInterface
      */
     private $transactions;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Agence::class, inversedBy="utilisateurs")
+     */
+    private $agence;
+
     public function __construct()
     {
         $this->transaction = new ArrayCollection();
@@ -366,5 +371,17 @@ class Utilisateur implements UserInterface
     public function getTransactions(): Collection
     {
         return $this->transactions;
+    }
+
+    public function getAgence(): ?Agence
+    {
+        return $this->agence;
+    }
+
+    public function setAgence(?Agence $agence): self
+    {
+        $this->agence = $agence;
+
+        return $this;
     }
 }

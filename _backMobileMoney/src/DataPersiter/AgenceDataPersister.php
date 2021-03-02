@@ -48,10 +48,12 @@ final class AgenceDataPersister implements ContextAwareDataPersisterInterface
     }
 
     public function remove($data, array $context = []): JsonResponse
-    {
-        dd($data);
-        $data->setStatus(true);
+    {  $data->setStatus(true);
         $this->manager->persist($data);
+
+        foreach ($data->getUtilisateurs() as $user){
+            $user->setStatus(true);
+        }
         $this->manager->flush();
         return new JsonResponse("Archivage successfully!",200,[],true);
         
