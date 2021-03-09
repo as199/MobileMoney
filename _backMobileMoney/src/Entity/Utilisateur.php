@@ -45,7 +45,7 @@ class Utilisateur implements UserInterface
     private ?int $id;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(type="string", length=180)
      * @Assert\NotBlank
      *  @Assert\Email(message = "The email '{{ value }}' is not a valid email.")
      * @Assert\NotBlank(message="please enter your E-mail")
@@ -71,7 +71,7 @@ class Utilisateur implements UserInterface
     private ?string $nomComplet;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=100, unique=true)
      * @Assert\NotBlank(message="please enter your phone number")
      * @Groups({"compte:read","user:read","caissier:read","adminAgence:read","transaction:read"})
      */

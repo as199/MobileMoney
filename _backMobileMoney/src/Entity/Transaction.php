@@ -20,6 +20,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *              "access_control"="(is_granted('ROLE_UserAgence') or is_granted('ROLE_AdminAgence') )",
  *              "access_control_message"="Vous n'avez pas access à cette Ressource",
  *          },
+ *     "findTransaction":{
+ *              "route_name"="findTransaction",
+ *              "method":"POST",
+ *              "path":"/transactions/find",
+ *              "normalization_context"={"groups"={"transactionGet:read"}},
+ *              "access_control"="(is_granted('ROLE_UserAgence') or is_granted('ROLE_AdminAgence') )",
+ *              "access_control_message"="Vous n'avez pas access à cette Ressource",
+ *          },
  * },
  *    collectionOperations={
  *        "addtransaction":{
@@ -36,6 +44,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *              "normalizationContext"={"groups"={"transaction:read"}},
  *              "access_control"="(is_granted('ROLE_AdminSysteme') or is_granted('ROLE_AdminAgence') )",
  *              "access_control_message"="Vous n'avez pas access à cette Ressource",
+ *          },
+ *         "Calculer":{
+ *               "method":"POST",
+ *               "path":"/calculer",
+ *               "route_name"="addCalcul"
  *          }
  *     })
  */
@@ -45,20 +58,20 @@ class Transaction
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"client:read","transaction:read"})
+     * @Groups({"client:read","transaction:read","transactionGet:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"transaction:write","client:read","transaction:read"})
+     * @Groups({"transaction:write","client:read","transaction:read","transactionGet:read"})
      *
      */
     private $montant;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups ({"transaction:write","client:read","transaction:read"})
+     * @Groups ({"transaction:write","client:read","transaction:read","transactionGet:read"})
      */
     private $dateEnvoi;
 
@@ -130,16 +143,19 @@ class Transaction
 
     /**
      * @ORM\Column(type="string", length=255)
+     *  @Groups ({"transactionGet:read"})
      */
     private $numero;
 
     /**
      * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="transactions")
+     * @Groups ({"transactionGet:read"})
      */
     private $clientEnvoi;
 
     /**
      * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="transactions")
+     *  @Groups ({"transactionGet:read"})
      */
     private $clientRecepteur;
 

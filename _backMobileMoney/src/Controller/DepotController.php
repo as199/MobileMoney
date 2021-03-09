@@ -101,7 +101,7 @@ class DepotController extends AbstractController
         $depot->setCompte($compte);
         $this->manager->persist($depot);
         $this->manager->flush();
-        return new JsonResponse("le depot a été effectuer avec success",200,[],true);
+        return $this->json(['message' => 'le depot a été effectuer avec success ', 'data'=>$depot]);
 
     }
 
@@ -120,6 +120,7 @@ class DepotController extends AbstractController
                     $this->manager->persist($compte);
                     $this->manager->remove($depot);
                     $this->manager->flush();
+
                     return new JsonResponse("Depot annuler avec succee", 200, [], true);
 
                 }else{

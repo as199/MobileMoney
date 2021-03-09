@@ -22,31 +22,32 @@ class Client
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"client:read","transaction:read"})
+     * @Groups({"client:read","transaction:read","transactionGet:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups ({"transaction:write","client:read","transaction:read"})
+     * @Groups ({"transaction:write","client:read","transaction:read","transactionGet:read"})
      */
-    private $nomComplet;
+    private $nom;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups ({"transaction:write","client:read","transaction:read","transactionGet:read"})
+     */
+    private $prenom;
 
     /**
      * @ORM\Column(type="string")
-     * @Groups ({"transaction:write","client:read","transaction:read"})
+     * @Groups ({"transaction:write","client:read","transaction:read","transactionGet:read"})
      */
     private $cni;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups ({"transaction:write","client:read","transaction:read"})
-     */
-    private $adresse;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups ({"transaction:write","client:read","transaction:read"})
+     * @Groups ({"transaction:write","client:read","transaction:read","transactionGet:read"})
      */
     private $telephone;
 
@@ -77,14 +78,26 @@ class Client
         return $this->id;
     }
 
-    public function getNomComplet(): ?string
+    public function getNom(): ?string
     {
-        return $this->nomComplet;
+        return $this->nom;
     }
 
-    public function setNomComplet(string $nomComplet): self
+    public function setNom(string $nom): self
     {
-        $this->nomComplet = $nomComplet;
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
+    }
+
+    public function setPrenom(string $prenom): self
+    {
+        $this->prenom = $prenom;
 
         return $this;
     }
@@ -101,17 +114,6 @@ class Client
         return $this;
     }
 
-    public function getAdresse(): ?string
-    {
-        return $this->adresse;
-    }
-
-    public function setAdresse(string $adresse): self
-    {
-        $this->adresse = $adresse;
-
-        return $this;
-    }
 
     public function getTelephone(): ?string
     {

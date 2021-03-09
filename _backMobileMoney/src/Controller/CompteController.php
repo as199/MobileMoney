@@ -69,7 +69,7 @@ class CompteController extends AbstractController
 
         $this->manager->persist($compte);
         $this->manager->flush();
-        return new JsonResponse("Le compte a été approvisionné avec succé",200,[],true);
+        return $this->json(['message' => 'compte crée avec succée ', 'data'=>$compte]);
 
 
     }

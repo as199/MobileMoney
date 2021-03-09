@@ -152,18 +152,14 @@ class TransactionController extends AbstractController
 
             if ($transaction->getDateRetrait() === null ){
                 if ($transaction->getDateAnnulation()=== null){
-                    if ($transaction->getClientRecepteur()->getTelephone() === $data['client']['telephone']){
                         $compte = $this->compteRepository->findOneBy(['id'=>$transaction->getCompte()->getId()]);
                         $compte->setSolde($compte->getSolde() + $transaction->getMontant()+$transaction->getTotalCommission());
                         $transaction->setDateRetrait(new \DateTime('now'));
                         $transaction->setUserRetrait($user);
                         $this->manager->persist($transaction);
                         $this->manager->flush();
-                        return new JsonResponse("Ce transfert a  été retirer avec succè ", 200, [], true);
+                        return $this->json(['message' => 'Ce transfert a  été retirer avec succè ', 'data'=>$transaction],200);
 
-                    }else{
-                        return new JsonResponse("Ce transfert n'est pas destiner à ce numero de telephone ", 400, [], true);
-                    }
                 }else{
                     return new JsonResponse("Ce transfert a été annulé", 400, [], true);
                 }
@@ -178,8 +174,22 @@ class TransactionController extends AbstractController
 
         $this->manager->persist($transaction);
         $this->manager->flush();
-        return new JsonResponse("transaction effectuer avec succé", 200, [], true);
+        return $this->json(['message' => 'la transaction a été effectuer avec success ', 'data'=>$transaction],200);
 
+    }
+
+    public function GetTransactionByNum(Request $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $result = array();
+        $transaction = $this->transactionRepository->findOneBy(['numero'=>$data['code']]);
+        $clientEnvoi = $this->clientRepository->findOneBy(['id'=>$transaction->getClientEnvoi()->getId()]);
+        $clientRecepteur = $this->clientRepository->findOneBy(['id'=>$transaction->getClientRecepteur()->getId()]);
+        $result["clientEnvoi"] = $clientEnvoi;
+        $result["clientRecepteur"] = $clientRecepteur;
+        $result["montant"] = $transaction->getMontant();
+        $result["dateEnvoi"] = $transaction->getDateEnvoi();
+        return $this->json(['data'=>$result],200);
     }
 
     public function DeleteTransaction(Request $request): JsonResponse
@@ -208,5 +218,18 @@ class TransactionController extends AbstractController
         }else{
             return new JsonResponse("Impossible d'annuler le depot car la transaction n'as pas été effectuer dans cette agence", 400, [], true);
         }
+    }
+
+    public function Calculatrice(Request $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(),true);
+        if($data['montant'] > 0){
+         $montant = $this->calculFraisService->CalcFrais($data['montant']);
+            return $this->json(['message' => 'le montant', 'data'=>$montant]);
+        }else{
+            return $this->json(['message' => 'le montant doit etre superieur à 0 '],500);
+
+        }
+
     }
 }
