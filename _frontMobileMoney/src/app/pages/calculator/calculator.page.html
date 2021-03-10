@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>calculator</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col  size="12" size="12" size-xs="12" size-sm="10" size-md="6" size-lg="6" offset-lg="3" offset-sm="1" offset-md="3">
+        <ion-text color="dark">
+          <h5>Calculatrice</h5>
+        </ion-text>
+      </ion-col>
+      <ion-col  size="12" size="12" size-xs="12" size-sm="10" size-md="6" size-lg="6" offset-lg="3" offset-sm="1" offset-md="3">
+        <form (ngSubmit)="calculer()" [formGroup]="credentials">
+          <section>
+            <ion-item>
+              <ion-label position="floating">Type</ion-label>
+              <ion-input type="text" value="Depot"></ion-input>
+            </ion-item>
+          </section>
+          <section>
+            <ion-label position="floating">Montant</ion-label>
+            <ion-input type="number" class="form-control" formControlName="montant"></ion-input>
+            <div *ngIf="(montant.dirty || montant.touched) && montant.errors" class="errors">
+              <span *ngIf="montant.errors?.required">Montant is required</span>
+              <span *ngIf="montant.errors?.min">Montant is invalid</span>
+            </div>
+          </section>
+          <section class="btn">
+            <ion-button shape="round" class="suivant" type="submit" color="danger" expand="block" [disabled]="!credentials.valid">Calculer</ion-button>
+          </section>
+        </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <!-- 
+   -->
+</ion-content>

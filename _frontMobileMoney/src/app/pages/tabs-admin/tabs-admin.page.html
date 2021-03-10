@@ -1,0 +1,7 @@
+<ion-tabs>
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button *ngFor="let page of pages" [tab]="page.tabName">
+      <ion-icon [name]="page.iconName"></ion-icon>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

@@ -1,0 +1,38 @@
+
+<ion-content>
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col size="12" size-xs="12" size-sm="6" size-md="6" size-lg="6" offset-lg="3" offset-sm="3" offset-md="3">
+        <div class="login-logo">
+          <img src="../assets/img/logoSaMoney.jpeg" alt="SaMoney logo" />
+        </div>
+      </ion-col>
+      <ion-col size="12" size-xs="12" size-sm="6" size-md="6" size-lg="6" offset-lg="3"  offset-sm="3" offset-md="3">
+        <form (ngSubmit)="login()" [formGroup]="credentials">
+    
+          <div class="input-group">
+            <ion-item>
+              <ion-label position="floating" color="primary">Téléphone</ion-label>
+              <ion-input type="text" placeholder="Enter Your Phone number" formControlName="username"></ion-input>
+            </ion-item>
+            <div *ngIf="(username.dirty || username.touched) && username.errors" class="errors">
+              <span *ngIf="username.errors?.required">Téléphone is required</span>
+              <span *ngIf="username.errors?.length">Téléphone is invalid</span>
+            </div>
+            <ion-item>
+              <ion-label position="floating" color="primary">Password</ion-label>
+              <ion-input type="password" placeholder="Enter Password" formControlName="password"></ion-input>
+            </ion-item>
+            <div *ngIf="(password.dirty || password.touched) && password.errors" class="errors">
+              <span *ngIf="password.errors?.required">Password is required</span>
+              <span *ngIf="email.errors?.minlength">Password need to be 6 characters</span>
+            </div>
+          </div>
+    
+    
+        <ion-button type="submit" [disabled]="!credentials.valid" expand="block">connexion</ion-button>
+      </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

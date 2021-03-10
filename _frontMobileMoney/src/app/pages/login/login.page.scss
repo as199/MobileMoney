@@ -1,0 +1,14 @@
+ion-content{
+  --background-color: #f3efef;
+}
+.input-group{
+  margin-top: 15px ;
+}
+.errors{
+  font-size: small;
+  color: #fff;
+  background: var(--ion-color-danger);
+  padding-left: 15px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}

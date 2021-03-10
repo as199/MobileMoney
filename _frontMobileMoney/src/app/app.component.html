@@ -1,0 +1,58 @@
+<ion-app>
+  <ion-menu
+    side="start"
+    contentId="content"
+    menuId="home-menu"
+    swipeGesture="true"
+  >
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>Menu</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <ion-list>
+        <ion-menu-toggle auto-hide="true" *ngFor="let p of pages">
+          <ion-item
+          tappable
+            (click)="onItemClick(p.url)"
+            routerDirection="root"
+            [class.active-item]="selectedPath.includes(p.url)"
+          >
+            <ion-icon [name]="p.iconName" slot="start"></ion-icon>
+            <ion-label> {{ p.title }} </ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+        <ion-menu-toggle auto-hide="true">
+          <ion-item tappable (click)="logout()" routerDirection="root">
+            <ion-icon name="log-out" slot="start"></ion-icon>
+            Deconnexion
+          </ion-item>
+        </ion-menu-toggle>
+
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+
+  <ion-menu
+    side="end"
+    contentId="content"
+    menuId="home-right"
+    swipeGesture="true"
+  >
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>User</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <ion-label>Menu Utilisateur</ion-label>
+    </ion-content>
+  </ion-menu>
+
+  <ion-router-outlet id="content"></ion-router-outlet>
+
+
+</ion-app>

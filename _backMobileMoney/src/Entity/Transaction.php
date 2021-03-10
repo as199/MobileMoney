@@ -70,19 +70,19 @@ class Transaction
     private $montant;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      * @Groups ({"transaction:write","client:read","transaction:read","transactionGet:read"})
      */
     private $dateEnvoi;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      * @Groups ({"transaction:write","client:read","transaction:read"})
      */
     private $dateRetrait;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      * @Groups ({"transaction:write","client:read","transaction:read"})
      */
     private $dateAnnulation;

@@ -1,0 +1,78 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>retrait</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col  size="12" size-xs="12" size-sm="10" size-md="6" size-lg="6" offset-lg="3" offset-sm="1" offset-md="3">
+        <form [formGroup]="credentials">
+          <section>
+            <ion-item>
+              <ion-label position="floating">Code</ion-label>
+              <ion-input type="text" class="form-control" formControlName="code" (change)="Recherche()"></ion-input>
+            </ion-item>
+          </section>
+           <ion-item class="type">
+             <ion-label [color]="etatColor1" (click)="previous()">Bénéficaire</ion-label>
+             <ion-label [color]="etatColor2" (click)="next()" slot="end">Emetteur</ion-label>
+           </ion-item>
+           <section *ngIf="parti1 == 1">
+             <ion-item>
+               <ion-label position="floating">N° CNI</ion-label>
+               <ion-input type="text" class="form-control" formControlName="cni"></ion-input>
+             </ion-item>
+             <ion-item>
+               <ion-label position="floating">Nom & Prénom</ion-label>
+               <ion-input type="text" [value]="nomEmetteur" disabled class="form-control"></ion-input>
+             </ion-item>
+             <ion-item>
+               <ion-label position="floating">Montant à Recevoir</ion-label>
+               <ion-input type="text" [value]="montant" disabled class="form-control"></ion-input>
+             </ion-item>
+             <ion-item>
+               <ion-label position="floating">Téléphone</ion-label>
+               <ion-input type="text" disabled class="form-control" [value]="clientRetrait.telephone"></ion-input>
+             </ion-item>
+             <ion-item>
+               <ion-label position="floating">Date D'envoi</ion-label>
+               <ion-input type="text" disabled class="form-control" [value]="dateEnvoi"></ion-input>
+             </ion-item>
+           </section>
+       
+           <section *ngIf="parti2 == 1">
+             <ion-item>
+               <ion-label position="floating">N° CNI</ion-label>
+               <ion-input type="text" disabled [value]="clientEnvoi?.cni" class="form-control"></ion-input>
+             </ion-item>
+             <ion-item>
+               <ion-label position="floating">Nom & Prénom</ion-label>
+               <ion-input type="text" [value]="nomRecepteur" disabled class="form-control"></ion-input>
+             </ion-item>
+             <ion-item>
+               <ion-label position="floating">Montant ENVOYE</ion-label>
+               <ion-input type="text" [value]="montant" disabled class="form-control"></ion-input>
+             </ion-item>
+             <ion-item>
+               <ion-label position="floating">Téléphone</ion-label>
+               <ion-input type="text" disabled class="form-control" [value]="clientEnvoi?.telephone"></ion-input>
+             </ion-item>
+             <ion-item>
+               <ion-label position="floating">Date D'envoi</ion-label>
+               <ion-input type="text" disabled class="form-control" [value]="dateEnvoi"></ion-input>
+             </ion-item>
+           </section>
+       
+           <section class="btn">
+             <ion-button shape="round" class="suivant" (click)="retirer()"  color="danger" expand="block" type="button">Retirer</ion-button>
+           </section>
+         </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

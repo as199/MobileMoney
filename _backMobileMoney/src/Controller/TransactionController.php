@@ -148,14 +148,20 @@ class TransactionController extends AbstractController
         $transaction->setStatus(false);
         $compte->setSolde($compte->getSolde() - $data['montant'] + $tarif['Depot']);
     }elseif ($data['type'] === 'retrait'){
-            $transaction = $this->transactionRepository->findOneBy(['numero'=>$data['numero']]);
-
+            $transaction = $this->transactionRepository->findOneBy(['numero'=>$data['code']]);
+            
             if ($transaction->getDateRetrait() === null ){
                 if ($transaction->getDateAnnulation()=== null){
                         $compte = $this->compteRepository->findOneBy(['id'=>$transaction->getCompte()->getId()]);
                         $compte->setSolde($compte->getSolde() + $transaction->getMontant()+$transaction->getTotalCommission());
                         $transaction->setDateRetrait(new \DateTime('now'));
                         $transaction->setUserRetrait($user);
+                        if(isset($data['cni'])){
+                            $client = $this->clientRepository->findOneBy(['id'=>$transaction->getClientRecepteur()->getId()]);
+                            $client->setCni($data['cni']);
+                            $this->manager->persist($client);
+                         }
+                        
                         $this->manager->persist($transaction);
                         $this->manager->flush();
                         return $this->json(['message' => 'Ce transfert a  été retirer avec succè ', 'data'=>$transaction],200);

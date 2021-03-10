@@ -1,0 +1,68 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-item>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-avatar class="centre">
+        <img src="../../../assets/img/logoSa.png">
+      </ion-avatar>
+      <ion-avatar slot="end">
+        <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
+      </ion-avatar>
+    </ion-item>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col size="12" size="12" size-xs="12" size-sm="10" size-md="6" size-lg="6" offset-lg="3" offset-sm="1" offset-md="3">
+        <ion-card><ion-card-content>
+          <ion-label>Mon sole disponible</ion-label>
+           <ion-item>
+             <ion-label>150 000 cfa</ion-label>
+             <ion-icon name="eye-off-outline" slot="end"></ion-icon>
+           </ion-item>
+           <ion-label>mise à jour le 22/10/2021 à 11:55 </ion-label>
+         </ion-card-content>
+       </ion-card>
+      </ion-col>
+      <ion-col size="12" size="12" size-xs="12" size-sm="10" size-md="6" size-lg="6" offset-lg="3" offset-sm="1" offset-md="3">
+        <ion-list>
+          <ion-item tappable *ngFor="let p of pages" (click)="onItemClick(p.url)" routerDirection="root">
+            <ion-icon [name]="p.iconName"  color="danger"></ion-icon>&nbsp;
+            {{p.title}}
+            <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+          </ion-item>
+          <ion-item tappable (click)="logout()">
+            <ion-icon name="log-out" color="danger" ></ion-icon>&nbsp;Déconnexion
+            <ion-icon slot="end" name="chevron-forward"></ion-icon>
+          </ion-item>
+      </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <!-- <ion-card><ion-card-content>
+     <ion-label>Mon sole disponible</ion-label>
+      <ion-item>
+        <ion-label>150 000 cfa</ion-label>
+        <ion-icon name="eye-off-outline" slot="end"></ion-icon>
+      </ion-item>
+      <ion-label>mise à jour le 22/10/2021 à 11:55 </ion-label>
+    </ion-card-content>
+  </ion-card>
+  <ion-list>
+      <ion-item tappable *ngFor="let p of pages" (click)="onItemClick(p.url)" routerDirection="root">
+        <ion-icon [name]="p.iconName"  color="danger"></ion-icon>&nbsp;
+        {{p.title}}
+        <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+      </ion-item>
+      <ion-item tappable (click)="logout()">
+        <ion-icon name="log-out" color="danger" ></ion-icon>&nbsp;Déconnexion
+        <ion-icon slot="end" name="chevron-forward"></ion-icon>
+      </ion-item>
+  </ion-list> -->
+</ion-content>
+
+
