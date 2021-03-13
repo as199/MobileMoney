@@ -1,0 +1,104 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>utilisateur</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid >
+    <ion-row>
+      <ion-col  size="12" size-xs="12" size-sm="10" size-md="6" size-lg="6" offset-lg="3" offset-sm="1" offset-md="3">
+        <ion-segment value="ajouter">
+          <ion-segment-button (click)="previous()" value="ajouter">
+            <ion-label>Ajouter </ion-label>
+          </ion-segment-button>
+          <ion-segment-button (click)="next()" value="liste">
+            <ion-label>Lister </ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </ion-col>
+      <ion-col   size="12" size-xs="12" size-sm="10" size-md="6" size-lg="6" offset-lg="3" offset-sm="1" offset-md="3">
+        <form [formGroup]="credentials" (ngSubmit)="Ajouter()">
+          <section *ngIf="visible">
+            <ion-list >
+                <ion-item>
+                  <img  [src]="image" alt="">
+                </ion-item>
+                <ion-item>
+                  <ion-label position="floating">Prenom</ion-label>
+                  <ion-input type="text" class="form-control"  formControlName="prenom" ></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label position="floating">Nom</ion-label>
+                  <ion-input type="text" class="form-control"  formControlName="nom" ></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label position="floating">Téléphone</ion-label>
+                  <ion-input type="text" class="form-control" formControlName="telephone"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label position="floating">Adresse</ion-label>
+                  <ion-input type="text" class="form-control" formControlName="adresse"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label position="floating">E-mail</ion-label>
+                  <ion-input type="email" class="form-control" formControlName="email" ></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-button expand="block" (click)="selectImage()">Choisir une image</ion-button>
+                </ion-item>
+                <ion-item>
+                  <ion-label position="stacked">Genre</ion-label>
+                  <ion-select formControlName="genre" placeholder="Select One"  interface="popover">
+                    <ion-select-option value="homme">Homme</ion-select-option>
+                    <ion-select-option value="femme">Femme</ion-select-option>
+                  </ion-select>
+                </ion-item>
+                <ion-item>
+                  <ion-label position="stacked">Type</ion-label>
+                  <ion-select formControlName="type" placeholder="Select One"  interface="popover">
+                    <ion-select-option value="AdminSysteme">Admin Systéme</ion-select-option>
+                    <ion-select-option value="AdminAgence">Admin Agence</ion-select-option>
+                    <ion-select-option value="Caissier">Caissier</ion-select-option>
+                    <ion-select-option value="UserAgence">User Agence</ion-select-option>
+                  </ion-select>
+                </ion-item>
+                <ion-item>
+                  <ion-label position="stacked">Affecter à une agence</ion-label>
+                  <ion-select formControlName="agences" placeholder="Select One"  interface="popover">
+                    <ion-select-option [value]="agence?.id" *ngFor="let agence of agences">{{agence?.nom}}</ion-select-option>
+                  </ion-select>
+                </ion-item>
+            </ion-list>
+            <ion-button shape="round" class="suivant"  color="danger" expand="block" type="submit">Ajouter</ion-button>
+          </section>
+
+        </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-grid  *ngIf="!visible">
+    <ion-row>
+      <ion-col *ngFor="let u of users" size="6">
+         <ion-card>
+          <ion-card-header>
+            <ion-card-subtitle>
+              <ion-icon class="deleted" color="danger" name="trash-outline"></ion-icon>
+            </ion-card-subtitle>
+            <ion-card-title>{{u?.nom}}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content> 
+            <section *ngIf="u?.visible">
+              <strong>Agence : </strong> {{u?.agence}} <br>
+            </section>
+            <strong>Type : </strong> {{u?.type}} <br> 
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

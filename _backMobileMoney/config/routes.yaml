@@ -24,6 +24,10 @@ addingAgence:
 deleteTransaction:
   path: /api/transactions/delete
   controller: App\Controller\TransactionController::DeleteTransaction
+SoldeCompte:
+  path: /api/transactions/solde
+  controller: App\Controller\TransactionController::GetSolde
+
 findTransaction:
   path: /api/transactions/find
   controller: App\Controller\TransactionController::GetTransactionByNum

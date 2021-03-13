@@ -25,6 +25,13 @@
           </ion-item>
         </ion-menu-toggle>
         <ion-menu-toggle auto-hide="true">
+          <ion-item tappable (click)="onItemClick(lien)" routerDirection="root">
+            <ion-icon name="settings-outline" slot="start"></ion-icon>
+            Parametrage
+          </ion-item>
+        </ion-menu-toggle>
+      
+        <ion-menu-toggle auto-hide="true">
           <ion-item tappable (click)="logout()" routerDirection="root">
             <ion-icon name="log-out" slot="start"></ion-icon>
             Deconnexion
@@ -32,23 +39,6 @@
         </ion-menu-toggle>
 
       </ion-list>
-    </ion-content>
-  </ion-menu>
-
-  <ion-menu
-    side="end"
-    contentId="content"
-    menuId="home-right"
-    swipeGesture="true"
-  >
-    <ion-header>
-      <ion-toolbar color="primary">
-        <ion-title>User</ion-title>
-      </ion-toolbar>
-    </ion-header>
-
-    <ion-content>
-      <ion-label>Menu Utilisateur</ion-label>
     </ion-content>
   </ion-menu>
 

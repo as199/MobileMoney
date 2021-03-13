@@ -55,13 +55,13 @@ class AdminSystemController extends AbstractController
      */
     public function Adduser(InscriptionService $service, Request $request): JsonResponse
     {
-        $type = $request->get('type'); //pour dynamiser
+       
 
-        $utilisateur = $service->NewUser($type,$request);
+        $utilisateur = $service->NewUser($request);
         $this->validator->ValidatePost($utilisateur) ;
         $this->manager->persist($utilisateur);
         $this->manager->flush();
-        return new JsonResponse("success", 200, [], true);
+        return new JsonResponse(["data"=>$utilisateur], 200);
 
     }
 }

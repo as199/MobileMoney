@@ -71,6 +71,22 @@ const routes: Routes = [
   {
     path: 'retrait',
     loadChildren: () => import('./pages/retrait/retrait.module').then( m => m.RetraitPageModule)
+  },
+  {
+    path: 'dashboard',
+    loadChildren: () => import('./configs/dashboard/dashboard.module').then( m => m.DashboardPageModule)
+  },
+  {
+    path: 'utilisateur',
+    loadChildren: () => import('./configs/utilisateur/utilisateur.module').then( m => m.UtilisateurPageModule)
+  },
+  {
+    path: 'agence',
+    loadChildren: () => import('./configs/agence/agence.module').then( m => m.AgencePageModule)
+  },
+  {
+    path: 'versement',
+    loadChildren: () => import('./configs/versement/versement.module').then( m => m.VersementPageModule)
   }
 ];
 

@@ -77,31 +77,30 @@ class AgenceController extends AbstractController
     {
       $infos = json_decode($request->getContent(),true);
         $agence = $serializer->denormalize($infos, Agence::class);
-      if($infos['comptes']){
-          if(isset($infos['comptes']["id"])){
-              $compte= $this->compteRepository->findOneBy(['id' =>$infos['comptes']["id"]]);
-          }else{
-              $newcompte = $serializer->denormalize($infos['comptes'], Compte::class);
-              $newcompte->setNumCompte($this->generator->genrecode("CMPT",'compte'));
-              $newcompte->setAdminSysteme($tokenStorage->getToken()->getUser());
-              $newcompte->setStatus(false);
-              $this->manager->persist($newcompte);
-          }
+        $newcompte = new Compte();
+        $newcompte->setNumCompte($this->generator->genrecode("CMPT",'compte'));
+        $newcompte->setSolde(70000);
+        $newcompte->setAdminSysteme($tokenStorage->getToken()->getUser());
+        $newcompte->setStatus(false);
+        $this->manager->persist($newcompte);
+          
 
-      }
+      
         if($infos['userAgence']){
-            foreach($infos['userAgence'] as $user){
-              if( $agent = $this->userAgenceRepository->find($user['id'])){
-                  $agence->addUserAgence($agent);
+            foreach($infos['userAgence'] as  $user){
+              if( $agent = $this->userAgenceRepository->find($user)){
+
+                  $agence->addUtilisateur($agent);
               }
 
             }
 
         }
         $agence->setStatus(false);
+        $agence->setCompte($newcompte);
         $this->manager->persist($agence);
         $this->manager->flush();
-        return new JsonResponse("success", 200, [], true);
+        return $this->json(["data"=> $agence], 200);
     }
 
 }

@@ -1,6 +1,6 @@
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from "@angular/core";
-import {EMPTY, Observable, of} from 'rxjs';
+import { Observable, of} from 'rxjs';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import {catchError} from 'rxjs/operators';
 
@@ -22,7 +22,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
       return next.handle(req).pipe(
         catchError((err, caught) => {
           if (err.status === 401) {
-            this.authService.logout();
+            // this.authService.logout();
             return of(err);
           }
           throw err;

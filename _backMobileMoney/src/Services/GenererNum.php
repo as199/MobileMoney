@@ -34,13 +34,19 @@ class GenererNum
        $this->depotRepository = $depotRepository;
     }
 
-    public function genrecode($initial,$type): string
+    public function genrecode($initial ,$type): string
     {
-        $an = Date('y');
-        $an = str_shuffle($an);
+        $an = Date('Y');
+        $an = str_shuffle(((int)$an - 105));
         $cont = $this->getLastCompte($type);
         $long = strlen($cont);
-        return str_pad($initial.$an, 11-$long, "0").$cont;
+        if($initial != 0){
+            $code= str_pad($initial.$an, 9-$long, "0").$cont;
+        }else{
+            $code= str_pad($an, 9-$long, "0").$cont;
+        }
+
+        return $code;
     }
 
     private function getLastCompte($val): int

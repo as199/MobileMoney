@@ -27,14 +27,16 @@ export class LoginPage implements OnInit {
   }
 
   async login() {
-    const loading = await this.loadingCtrl.create();
+    const loading = await this.loadingCtrl.create({
+      message: 'Please wait...'
+    });
     await loading.present();
 
     this.authService.login(this.credentials.value).subscribe(
       async(res) =>{
         await loading.dismiss();
-        await this.router.navigateByUrl('/tabs-admin/admin-system', { replaceUrl: true});
-        await this.authService.SaveInfos();
+        let role = this.authService.getRole();
+         this.authService.RedirectMe(role);
 
       }, async(res) =>{
         await loading.dismiss();

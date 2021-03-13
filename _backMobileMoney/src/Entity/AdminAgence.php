@@ -16,23 +16,4 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class AdminAgence extends Utilisateur
 {
 
-
-    /**
-     * @ORM\OneToOne(targetEntity=Agence::class, cascade={"persist", "remove"})
-     * @Groups({"adminAgence:read"})
-     */
-    private $agence;
-
-
-    public function getAgence(): ?Agence
-    {
-        return $this->agence;
-    }
-
-    public function setAgence(?Agence $agence): self
-    {
-        $this->agence = $agence;
-
-        return $this;
-    }
 }

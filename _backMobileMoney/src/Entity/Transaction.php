@@ -38,11 +38,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *              "access_control"="(is_granted('ROLE_UserAgence') or is_granted('ROLE_AdminAgence') )",
  *              "access_control_message"="Vous n'avez pas access à cette Ressource",
  *          },
+ *     "SoldeCompte":{
+ *              "route_name"="SoldeCompte",
+ *              "method":"POST",
+ *              "path":"/transactions/solde",
+ *              "access_control"="(is_granted('ROLE_UserAgence') or is_granted('ROLE_AdminAgence')  or is_granted('ROLE_Caissier') )",
+ *              "access_control_message"="Vous n'avez pas access à cette Ressource",
+ *          },
  *      "getTransaction":{
  *              "method":"GET",
  *              "path":"/transactions",
  *              "normalizationContext"={"groups"={"transaction:read"}},
- *              "access_control"="(is_granted('ROLE_AdminSysteme') or is_granted('ROLE_AdminAgence') )",
+ *              "access_control"="( is_granted('ROLE_AdminAgence') or is_granted('ROLE_UserAgence') )",
+ *              "access_control_message"="Vous n'avez pas access à cette Ressource",
+ *          },
+ *     "GetTransaction":{
+ *              "method":"GET",
+ *              "path":"/transactions/user",
+ *              "access_control"="(is_granted('ROLE_UserAgence') or is_granted('ROLE_AdminAgence')  or is_granted('ROLE_Caissier') )",
  *              "access_control_message"="Vous n'avez pas access à cette Ressource",
  *          },
  *         "Calculer":{
@@ -122,12 +135,6 @@ class Transaction
      */
     private $status;
 
-
-    /**
-     * @ORM\ManyToMany(targetEntity=Utilisateur::class, mappedBy="transaction")
-     * @Groups ({"transaction:write","transaction:read"})
-     */
-    private $utilisateurs;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -297,40 +304,6 @@ class Transaction
     public function setStatus(bool $status): self
     {
         $this->status = $status;
-
-        return $this;
-    }
-
-
-
-
-
-
-
-
-    /**
-     * @return Collection|Utilisateur[]
-     */
-    public function getUtilisateurs(): Collection
-    {
-        return $this->utilisateurs;
-    }
-
-    public function addUtilisateur(Utilisateur $utilisateur): self
-    {
-        if (!$this->utilisateurs->contains($utilisateur)) {
-            $this->utilisateurs[] = $utilisateur;
-            $utilisateur->addTransaction($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUtilisateur(Utilisateur $utilisateur): self
-    {
-        if ($this->utilisateurs->removeElement($utilisateur)) {
-            $utilisateur->removeTransaction($this);
-        }
 
         return $this;
     }

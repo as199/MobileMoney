@@ -43,6 +43,10 @@ const routes: Routes = [
       {
         path: 'retrait',
         loadChildren: () => import('../retrait/retrait.module').then( m => m.RetraitPageModule)
+      },
+      {
+        path: 'dashboard',
+        loadChildren: () => import('../../configs/dashboard/dashboard.module').then( m => m.DashboardPageModule)
       }
     ],
   },

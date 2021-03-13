@@ -132,7 +132,7 @@ class TransactionController extends AbstractController
         $this->manager->persist($clientEnvoi);
         $this->manager->persist($clientRetrait);
 
-        $transaction->setNumero($this->generator->genrecode("TR", 'transaction'));
+        $transaction->setNumero($this->generator->genrecode(0, 'transaction'));
         $transaction->setMontant($data['montant']);
         $transaction->setTotalCommission($totalFrais);
         $transaction->setCommissionDepot($tarif['Depot']);
@@ -180,7 +180,7 @@ class TransactionController extends AbstractController
 
         $this->manager->persist($transaction);
         $this->manager->flush();
-        return $this->json(['message' => 'la transaction a été effectuer avec success ', 'data'=>$transaction],200);
+        return $this->json(['data'=>$this->getLastTRansaction()],200);
 
     }
 
@@ -238,4 +238,36 @@ class TransactionController extends AbstractController
         }
 
     }
+
+    public function GetSolde(): JsonResponse
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+        $solde = 0;
+        if ($id = $user->getAgence()->getId()){
+           $agence = $this->agenceRepository->findOneBy(['id' => $id]);
+           $compteId = $agence->getCompte()->getId();
+           $compte = $this->compteRepository->findOneBy(['id' => $compteId]);
+           $solde = $compte->getSolde();
+        }
+        return $this->json(['data'=>$solde]);
+    }
+
+
+    private function getLastTRansaction(): array
+    {
+        $data= array();
+        $transaction = $this->transactionRepository->findBy([], ['id'=>'DESC'])[0];
+        $clientEnvoi = $transaction->getClientEnvoi();
+        $clientRetrait = $transaction->getClientRecepteur();
+        $data['montant'] = $transaction->getMontant();
+        $data['code'] = $transaction->getNumero();
+        $data['dateEnvoi'] = $transaction->getDateEnvoi()->format('Y-m-d');
+        $data['clientEnvoi']['telephone'] = $clientEnvoi->getTelephone();
+        $data['clientEnvoi']['nom'] = $clientEnvoi->getPrenom().''.$clientEnvoi->getNom();
+        $data['clientRetrait']['telephone'] = $clientEnvoi->getTelephone();
+        $data['clientRetrait']['nom'] = $clientRetrait->getPrenom().''.$clientRetrait->getNom();
+        return $data;
+    }
+
+
 }

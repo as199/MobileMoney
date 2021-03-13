@@ -105,6 +105,7 @@ class Compte
         $this->caissiers = new ArrayCollection();
         $this->transactions = new ArrayCollection();
         $this->depots = new ArrayCollection();
+        $this->status = false;
     }
 
     public function getId(): ?int

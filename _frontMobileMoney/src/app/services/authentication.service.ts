@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Plugins} from '@capacitor/core';
-import {BehaviorSubject, from, Observable} from 'rxjs';
+import {BehaviorSubject, from, Observable, Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {map, switchMap, tap} from 'rxjs/operators';
 import jwt_decode from "jwt-decode";
@@ -21,15 +21,18 @@ myToken='';
 myRole='';
 decoded: any;
  url = 'http://127.0.0.1:8000/api';
+ private _refresh$ = new Subject();
+  role: string;
   constructor(private http: HttpClient, private router: Router) {
     this.loadToken();
+  }
+  
+  get refresh$(): any{
+    return this._refresh$;
   }
   async loadToken(){
     const token = await Storage.get({key: TOKEN_KEY});
     if (token && token.value){
-      this.myToken = token.value;
-      this.decoded = jwt_decode(this.myToken);
-       await this.SaveInfos();
       this.isAuthenticated.next(true);
     }else{
       this.isAuthenticated.next(false);
@@ -39,11 +42,13 @@ decoded: any;
   loggedIn(){
     return !! Storage.get({key: TOKEN_KEY});
   }
+
   login(credentials: {username,password}): Observable<any>{
   return this.http.post('http://127.0.0.1:8000/api/login_check', credentials).pipe(
     map((data: any) => data.token),
     switchMap(token =>{
-      return from(Storage.set({key: TOKEN_KEY, value: token}));
+      // return from(Storage.set({key: TOKEN_KEY, value: token}));
+      return from(this.InfosSave(token));
     }),
     tap(_=> {
       this.isAuthenticated.next(true);
@@ -51,7 +56,39 @@ decoded: any;
   )
   }
 
+  async InfosSave(token){
+    this.myToken = token;
+    let from = jwt_decode(token);
+    this.myRole = from['roles'][0];
+    await Storage.set({key: TOKEN_KEY, value: token});
+    await Storage.set({key: 'role', value: from['roles']});
+    await Storage.set({key: 'telephone', value: from['telephone']});
 
+ }
+ getToken(){
+  return this.myToken;
+ }
+
+getRole(){
+  return this.myRole;
+}
+
+async getMyRole(){
+  const token = await Storage.get({key: 'role'});
+  if (token && token.value){
+     this.role = token.value;
+    
+   return this.role;
+  }
+}
+
+RedirectMe(role: string){
+  if(role){
+    this.router.navigateByUrl('/tabs-admin/admin-system', { replaceUrl: true});
+  }else {
+    this.router.navigateByUrl('/login', { replaceUrl: true});
+  }
+}
 
   logout(): Promise<void>{
     this.isAuthenticated.next(false);
@@ -68,31 +105,56 @@ decoded: any;
   Transaction(data: Transaction): Observable<any>{
     return this.http.post(`${this.url}/transactions`,data);
   }
+
   findTransactionByCode(code: string): Observable<any>{
     return this.http.post(`${this.url}/transactions/find`,code);
   }
 
-  getToken(){
-    return this.myToken;
+  MesTransactions(): Observable<any>{
+    return this.http.get(`${this.url}/transactions/user`);
   }
 
-   async SaveInfos(){
-     await Storage.set({key: 'role', value: this.decoded['roles']});
-     await Storage.set({key: 'telephone', value: this.decoded['telephone']});
-
+  getSolde(data: string= "sal"): Observable<any>{
+    return this.http.post(`${this.url}/transactions/solde`,data).pipe(
+      tap(() => {
+        this._refresh$.next();
+      }));
   }
 
-  getRole(){
-    return this.myRole;
+  AddAgence(agence: any): Observable<any>{
+    return this.http.post(`${this.url}/agences`,agence);
   }
 
-  RedirectMe(role: string){
-    if(role === "ROLE_AdminSysteme"){
-      this.router.navigateByUrl('/tabs-admin/admin-system', { replaceUrl: true});
-    }else if(role === "ROLE_AdminAgence" ){
-      this.router.navigateByUrl('/transaction', { replaceUrl: true});
-    }else if(role === "Caissier" ){
-
+  Verser(data: any): Observable<any>{
+    return this.http.post(`${this.url}/depots`,data);
     }
+
+  DeleteAgence(id: number): Observable<any>{
+    return this.http.delete(`${this.url}/agences/${id}`,);
   }
+
+  GetAgence(): Observable<any>{
+    return this.http.get(`${this.url}/agences`,);
+  }
+
+
+  GetCompte(): Observable<any>{
+    return this.http.get<any>(`${this.url}/adminSys/comptes`);
+  }
+
+  AddUser(user: any): Observable<any>{
+    return this.http.post(`${this.url}/adminSys/utilisateurs`,user);
+  }
+
+  GetUserNotAgence(): Observable<any>{
+    return this.http.get<any>(`${this.url}/adminSys/utilisateurs/users`);
+  }
+  GetAllUsers(): Observable<any>{
+    return this.http.get<any>(`${this.url}/adminSys/utilisateurs`);
+  }
+
+  GetDepot(): Observable<any>{
+    return this.http.get<any>(`${this.url}/depots`);
+  }
+ 
 }

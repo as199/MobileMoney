@@ -22,5 +22,5 @@ export const pages: any = [
     tabName: 'calculator',
     url: '/calculator',
     iconName: 'calculator-outline',
-  },
+  }
 ];

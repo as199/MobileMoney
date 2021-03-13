@@ -56,14 +56,15 @@ class InscriptionService
         $this->compteRepository = $compteRepository;
         $this->agenceRepository = $agenceRepository;
     }
-    public function NewUser($profil, Request $request){
-        $ref = false;
-        $userReq = $request->request->all();
-
-
+    public function NewUser(Request $request){
+        
+       $userReq = $request->request->all();
+        $nomComplet = $userReq['prenom'].''.$userReq['nom'];
+        $profil = $userReq['type'];
         $uploadedFile = $request->files->get('avatar');
         if(isset($userReq['agences'])){
-            $agence = $this->agenceRepository->findOneBy(['nomAgence'=>$userReq['agences']]);
+            $id =(int)$userReq['agences'];
+            $agence = $this->agenceRepository->findOneBy(['id'=>$id]);
         }
 
         if($uploadedFile){
@@ -77,9 +78,7 @@ class InscriptionService
             $user =AdminSysteme::class;
         }elseif ($profil == "Caissier"){
             $user =Caissier::class;
-            if(!empty($userReq['compte'])){
-                $ref = true;
-            }
+            
 
         }elseif ($profil == "UserAgence"){
             $user =UserAgence::class;
@@ -88,16 +87,14 @@ class InscriptionService
         }
         $newUser = $this->serializer->denormalize($userReq, $user);
         $newUser->setProfil($this->profilRepository->findOneBy(['libelle'=>$profil]));
-        if ($ref){
-            $newUser->addCompte($this->compteRepository->find($userReq['compte']));
-        }
+        
 
         $newUser->setStatus(false);
-        if(isset($userReq['agences'])){
+        $newUser->setNomComplet($nomComplet);
 
-            $newUser->setAgence($this->agenceRepository->findOneBy(["id"=>$userReq['agences']]));
+        $newUser->setAgence($agence);
 
-        }
+        
         $newUser->setPassword($this->encoder->encodePassword($newUser,$userReq['password']));
 
         return $newUser;

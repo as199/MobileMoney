@@ -1,0 +1,69 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>agence</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid >
+    <ion-row>
+      <ion-col  size="12" size-xs="12" size-sm="10" size-md="6" size-lg="6" offset-lg="3" offset-sm="1" offset-md="3">
+        <ion-segment value="ajouter">
+          <ion-segment-button (click)="previous()" value="ajouter">
+            <ion-label>Ajouter </ion-label>
+          </ion-segment-button>
+          <ion-segment-button (click)="next()" value="liste">
+            <ion-label>Lister </ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </ion-col>
+      <ion-col   size="12" size-xs="12" size-sm="10" size-md="6" size-lg="6" offset-lg="3" offset-sm="1" offset-md="3">
+        <form [formGroup]="credentials" (ngSubmit)="Ajouter()">
+          <section *ngIf="visible">
+            <ion-list >
+                <ion-item>
+                  <ion-label position="floating">Nom agence</ion-label>
+                  <ion-input type="text" class="form-control"  formControlName="nomAgence" ></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label position="floating">Adresse</ion-label>
+                  <ion-input type="text" class="form-control"  formControlName="adresse" ></ion-input>
+                </ion-item>
+                <ion-item  >
+                  <ion-label position="stacked">Affecter des utilisateurs</ion-label>
+                  <ion-select formControlName="userAgence" placeholder="Select"  multiple="true"  interface="popover">
+                    <ion-select-option [value]="u?.id" *ngFor="let u of users">{{u?.nom}}</ion-select-option>
+                  </ion-select>
+                </ion-item>
+            </ion-list>
+            <ion-button shape="round" class="suivant"  color="danger" expand="block" type="submit">Ajouter</ion-button>
+          </section>
+
+        </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-grid  *ngIf="!visible">
+    <ion-row>
+      <ion-col *ngFor="let a of agences" size="12" size-xs="12" size-sm="10" size-md="6" size-lg="6" offset-lg="3" offset-sm="1" offset-md="3">
+         <ion-card>
+          <ion-card-header>
+            <ion-card-subtitle>
+              <ion-icon class="deleted" color="danger" name="trash-outline"></ion-icon>
+            </ion-card-subtitle>
+            <ion-card-title>{{a?.nom}}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content> 
+            <strong>Numero compte : </strong> {{a?.numeroCompte}} <br>
+            <strong>Adresse : </strong> {{a?.adresse}} <br>
+            <strong>Capital : </strong> {{a?.solde}} <br>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

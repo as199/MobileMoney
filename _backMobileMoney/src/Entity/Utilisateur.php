@@ -27,7 +27,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *              "path":"/utilisateurs",
  *              "access_control"="(is_granted('ROLE_AdminSysteme') )",
  *              "access_control_message"="Vous n'avez pas access à cette Ressource",
- *          },"GET"
+ *          },"GET","getusers":{"method":"GET","path":"/utilisateurs/users",}
  *     }
  * )
  * * @UniqueEntity(fields="email", message="ce e-mail {{ value }} est féjà utilisé !")
@@ -111,11 +111,7 @@ class Utilisateur implements UserInterface
      */
     private $avatar;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=Transaction::class, inversedBy="utilisateurs")
-     *
-     */
-    private $transaction;
+
 
     /**
      * @ORM\OneToMany(targetEntity=Depot::class, mappedBy="utilisateur")
@@ -134,7 +130,6 @@ class Utilisateur implements UserInterface
 
     public function __construct()
     {
-        $this->transaction = new ArrayCollection();
         $this->depots = new ArrayCollection();
         $this->transactions = new ArrayCollection();
     }
@@ -307,30 +302,6 @@ class Utilisateur implements UserInterface
     public function setAvatar($avatar): self
     {
         $this->avatar = $avatar;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Transaction[]
-     */
-    public function getTransaction(): Collection
-    {
-        return $this->transaction;
-    }
-
-    public function addTransaction(Transaction $transaction): self
-    {
-        if (!$this->transaction->contains($transaction)) {
-            $this->transaction[] = $transaction;
-        }
-
-        return $this;
-    }
-
-    public function removeTransaction(Transaction $transaction): self
-    {
-        $this->transaction->removeElement($transaction);
 
         return $this;
     }

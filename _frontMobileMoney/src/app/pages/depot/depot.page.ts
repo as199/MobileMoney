@@ -85,14 +85,16 @@ export class DepotPage implements OnInit {
             this.authService.Transaction(this.myTransaction).subscribe(
               async (data) => {
                 await loading.dismiss();
-              this.credentials.reset();
-              const alert = await this.alertCtrl.create({
-                header: 'Succée',
-                message: 'Transaction effectuée avec succée',
-                buttons: ['OK']
-              });
+                this.credentials.reset();
+                const alert = await this.alertCtrl.create({
+                  header: 'Succée',
+                  message: 'Transaction effectuée avec succée',
+                  buttons: ['OK']
+                });
               await alert.present();
             }, async(error) => {
+              console.log(error);
+              
               await loading.dismiss();
               const alert = await this.alertCtrl.create({
                 header: 'Failed',

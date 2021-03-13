@@ -31,3 +31,24 @@ export const PagesADMINSYS: any[] = [
     iconName: 'calculator',
   }
 ];
+
+export const ConfigPage: any[] = [
+  {
+    title: 'Utilisateur',
+    tabName: 'utilisateur',
+    url: '/utilisateur',
+    iconName: 'person-add-outline'
+  },
+  {
+    title: 'Agence',
+    tabName: 'agence',
+    url: '/agence',
+    iconName: 'bookmarks-outline'
+  },
+  {
+    title: 'Compte',
+    tabName: 'compte',
+    url: '/versement',
+    iconName: 'cash-outline'
+  }
+];
