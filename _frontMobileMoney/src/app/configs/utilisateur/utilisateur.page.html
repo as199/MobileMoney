@@ -33,22 +33,42 @@
                   <ion-label position="floating">Prenom</ion-label>
                   <ion-input type="text" class="form-control"  formControlName="prenom" ></ion-input>
                 </ion-item>
+                <div *ngIf="(prenom.dirty || prenom.touched) && prenom.errors" class="errors">
+                  <span *ngIf="prenom.errors?.required">prenom is required</span>
+                  <span *ngIf="prenom.errors?.length">prenom is invalid</span>
+                </div>
                 <ion-item>
                   <ion-label position="floating">Nom</ion-label>
                   <ion-input type="text" class="form-control"  formControlName="nom" ></ion-input>
                 </ion-item>
+                <div *ngIf="(nom.dirty || nom.touched) && nom.errors" class="errors">
+                  <span *ngIf="nom.errors?.required">nom is required</span>
+                  <span *ngIf="nom.errors?.length">nom is invalid</span>
+                </div>
                 <ion-item>
                   <ion-label position="floating">Téléphone</ion-label>
                   <ion-input type="text" class="form-control" formControlName="telephone"></ion-input>
                 </ion-item>
+                <div *ngIf="(telephone.dirty || telephone.touched) && telephone.errors" class="errors">
+                  <span *ngIf="telephone.errors?.required">telephone is required</span>
+                  <span *ngIf="telephone.errors?.length">telephone is invalid</span>
+                </div>
                 <ion-item>
                   <ion-label position="floating">Adresse</ion-label>
                   <ion-input type="text" class="form-control" formControlName="adresse"></ion-input>
                 </ion-item>
+                <div *ngIf="(telephone.dirty || telephone.touched) && telephone.errors" class="errors">
+                  <span *ngIf="telephone.errors?.required">telephone is required</span>
+                  <span *ngIf="telephone.errors?.length">telephone is invalid</span>
+                </div>
                 <ion-item>
                   <ion-label position="floating">E-mail</ion-label>
                   <ion-input type="email" class="form-control" formControlName="email" ></ion-input>
                 </ion-item>
+                <div *ngIf="(telephone.dirty || telephone.touched) && telephone.errors" class="errors">
+                  <span *ngIf="telephone.errors?.required">telephone is required</span>
+                  <span *ngIf="telephone.errors?.length">telephone is invalid</span>
+                </div>
                 <ion-item>
                   <ion-button expand="block" (click)="selectImage()">Choisir une image</ion-button>
                 </ion-item>
@@ -59,6 +79,9 @@
                     <ion-select-option value="femme">Femme</ion-select-option>
                   </ion-select>
                 </ion-item>
+                <div *ngIf="(genre.dirty || genre.touched) && genre.errors" class="errors">
+                  <span *ngIf="genre.errors?.required">genre is required</span>
+                </div>
                 <ion-item>
                   <ion-label position="stacked">Type</ion-label>
                   <ion-select formControlName="type" placeholder="Select One"  interface="popover">
@@ -68,6 +91,9 @@
                     <ion-select-option value="UserAgence">User Agence</ion-select-option>
                   </ion-select>
                 </ion-item>
+                <div *ngIf="(type.dirty || type.touched) && type.errors" class="errors">
+                  <span *ngIf="type.errors?.required">type is required</span>
+                </div>
                 <ion-item>
                   <ion-label position="stacked">Affecter à une agence</ion-label>
                   <ion-select formControlName="agences" placeholder="Select One"  interface="popover">
@@ -92,12 +118,12 @@
             </ion-card-subtitle>
             <ion-card-title>{{u?.nom}}</ion-card-title>
           </ion-card-header>
-          <ion-card-content> 
+          <ion-card-content>
             <section *ngIf="u?.visible">
               <strong>Agence : </strong> {{u?.agence}} <br>
             </section>
-            <strong>Type : </strong> {{u?.type}} <br> 
-            <strong>Téléphone : </strong> {{u?.telephone}} <br> 
+            <strong>Type : </strong> {{u?.type}} <br>
+            <strong>Téléphone : </strong> {{u?.telephone}} <br>
           </ion-card-content>
         </ion-card>
       </ion-col>

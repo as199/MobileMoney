@@ -33,7 +33,7 @@ export class RetraitPage implements OnInit {
 
   ngOnInit() {
     this.credentials = this.fb.group({
-      code: ['', [Validators.required, Validators.minLength(5)]],
+      code: ['', [Validators.required, Validators.minLength(9),Validators.maxLength(9)]],
       cni: ['', [Validators.required, Validators.minLength(5)]],
       type: ['retrait', [Validators.required, Validators.minLength(5)]]
     });
@@ -134,4 +134,11 @@ async retirer(){
 
   await alert.present();
 }
+
+  get code() {
+    return this.credentials.get('code');
+  }
+  get cni() {
+    return this.credentials.get('cni');
+  }
 }

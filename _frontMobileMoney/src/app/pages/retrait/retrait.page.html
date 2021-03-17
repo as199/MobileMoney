@@ -1,11 +1,18 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button>
-        <ion-icon name="home-sharp"></ion-icon>
-      </ion-menu-button>
-    </ion-buttons>
-    <ion-title>retrait</ion-title>
+    <ion-item>
+      <ion-buttons slot="start">
+        <ion-menu-button>
+          <ion-icon name="home-sharp"></ion-icon>
+        </ion-menu-button>
+      </ion-buttons>
+      <ion-label class="centre">
+        Retrait
+      </ion-label>
+      <ion-avatar slot="end">
+        <img src="../../../assets/img/logoSa.png">
+      </ion-avatar>
+    </ion-item>
   </ion-toolbar>
 </ion-header>
 
@@ -19,6 +26,10 @@
               <ion-label position="floating">Code</ion-label>
               <ion-input type="text" class="form-control" formControlName="code" (change)="Recherche()"></ion-input>
             </ion-item>
+            <div *ngIf="(code.dirty || code.touched) && code.errors" class="errors">
+              <span *ngIf="code.errors?.required">Code is required</span>
+              <span *ngIf="code.errors?.length">Code is invalid</span>
+            </div>
           </section>
            <ion-item class="type">
              <ion-label [color]="etatColor1" (click)="previous()">Bénéficaire</ion-label>
@@ -29,6 +40,10 @@
                <ion-label position="floating">N° CNI</ion-label>
                <ion-input type="text" class="form-control" formControlName="cni"></ion-input>
              </ion-item>
+             <div *ngIf="(cni.dirty || cni.touched) && cni.errors" class="errors">
+               <span *ngIf="cni.errors?.required">CNI is required</span>
+               <span *ngIf="cni.errors?.length">CNI is invalid</span>
+             </div>
              <ion-item>
                <ion-label position="floating">Nom & Prénom</ion-label>
                <ion-input type="text" [value]="nomEmetteur" disabled class="form-control"></ion-input>
@@ -46,7 +61,7 @@
                <ion-input type="text" disabled class="form-control" [value]="dateEnvoi"></ion-input>
              </ion-item>
            </section>
-       
+
            <section *ngIf="parti2 == 1">
              <ion-item>
                <ion-label position="floating">N° CNI</ion-label>
@@ -69,7 +84,7 @@
                <ion-input type="text" disabled class="form-control" [value]="dateEnvoi"></ion-input>
              </ion-item>
            </section>
-       
+
            <section class="btn">
              <ion-button shape="round" class="suivant" (click)="retirer()"  color="danger" expand="block" type="button">Retirer</ion-button>
            </section>

@@ -1,11 +1,18 @@
-<ion-header class="doNotPrint">
+<ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button>
-        <ion-icon name="home-sharp"></ion-icon>
-      </ion-menu-button>
-    </ion-buttons>
-    <ion-title>depot</ion-title>
+    <ion-item>
+      <ion-buttons slot="start">
+        <ion-menu-button>
+          <ion-icon name="home-sharp"></ion-icon>
+        </ion-menu-button>
+      </ion-buttons>
+      <ion-label class="centre">
+        Depot
+      </ion-label>
+      <ion-avatar slot="end">
+        <img src="../../../assets/img/logoSa.png">
+      </ion-avatar>
+    </ion-item>
   </ion-toolbar>
 </ion-header>
 
@@ -32,23 +39,46 @@
                   <ion-label position="floating">N° CNI</ion-label>
                   <ion-input type="text" class="form-control" formControlName="cni" ></ion-input>
                 </ion-item>
+                <div *ngIf="(cni.dirty || cni.touched) && cni.errors" class="errors">
+                  <span *ngIf="cni.errors?.required">CNI is required</span>
+                  <span *ngIf="cni.errors?.length">CNI is invalid</span>
+                </div>
+
                 <ion-item>
                   <ion-label position="floating">Nom</ion-label>
                   <ion-input type="text" class="form-control"  formControlName="nom" ></ion-input>
                 </ion-item>
+                <div *ngIf="(nom.dirty || nom.touched) && nom.errors" class="errors">
+                  <span *ngIf="nom.errors?.required">Nom is required</span>
+                  <span *ngIf="nom.errors?.length">Nom is invalid</span>
+                </div>
+
                 <ion-item>
                   <ion-label position="floating">Prenom</ion-label>
                   <ion-input type="text" class="form-control" formControlName="prenom"  ></ion-input>
                 </ion-item>
+                <div *ngIf="(prenom.dirty || prenom.touched) && prenom.errors" class="errors">
+                  <span *ngIf="prenom.errors?.required">Prenom is required</span>
+                  <span *ngIf="prenom.errors?.length">Prenom is invalid</span>
+                </div>
+
                 <ion-item>
                   <ion-label position="floating">Téléphone</ion-label>
                   <ion-input type="text" class="form-control" formControlName="telephone" ></ion-input>
                 </ion-item>
+                <div *ngIf="(telephone.dirty || telephone.touched) && telephone.errors" class="errors">
+                  <span *ngIf="telephone.errors?.required">Telephone is required</span>
+                  <span *ngIf="telephone.errors?.length">Telephone is invalid</span>
+                </div>
               </section>
               <ion-item>
                 <ion-label position="floating">Montant</ion-label>
                 <ion-input type="number"  class="form-control" formControlName="montant" (change)="calculFrais()" ></ion-input>
               </ion-item>
+              <div *ngIf="(montant.dirty || montant.touched) && montant.errors" class="errors">
+                <span *ngIf="montant.errors?.required">Montant is required</span>
+                <span *ngIf="montant.errors?.length">Montant is invalid</span>
+              </div>
               <ion-item class="frais">
                 <ion-label position="floating">Frais</ion-label>
                 <ion-input type="text" disabled  [value]="frais" class="form-control" ></ion-input>
@@ -66,14 +96,26 @@
                 <ion-label position="floating">Prénom</ion-label>
                 <ion-input type="text" class="form-control" formControlName="prenom"  ></ion-input>
               </ion-item>
+              <div *ngIf="(prenom1.dirty || prenom1.touched) && prenom1.errors" class="errors">
+                <span *ngIf="prenom1.errors?.required">Prenom is required</span>
+                <span *ngIf="prenom1.errors?.length">Prenom is invalid</span>
+              </div>
               <ion-item>
                 <ion-label position="floating">Nom</ion-label>
                 <ion-input type="text" class="form-control" formControlName="nom" ></ion-input>
               </ion-item>
+              <div *ngIf="(nom1.dirty || nom1.touched) && nom1.errors" class="errors">
+                <span *ngIf="nom1.errors?.required">Nom is required</span>
+                <span *ngIf="nom1.errors?.length">Nom is invalid</span>
+              </div>
               <ion-item>
                 <ion-label position="floating">Téléphone</ion-label>
                 <ion-input type="text" class="form-control" formControlName="telephone"></ion-input>
               </ion-item>
+              <div *ngIf="(telephone1.dirty || telephone1.touched) && telephone1.errors" class="errors">
+                <span *ngIf="telephone1.errors?.required">Telephone is required</span>
+                <span *ngIf="telephone1.errors?.length">Telephone is invalid</span>
+              </div>
             </ion-list>
             <section class="btn">
               <ion-button shape="round" class="suivant"  color="danger" expand="block" [disabled]="!credentials.valid" (click)="Create()" type="submit">Suivant</ion-button>

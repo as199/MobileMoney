@@ -25,7 +25,7 @@ export class UtilisateurPage implements OnInit {
     private toastCtrl: ToastController,
     private domsanitizer: DomSanitizer
   ) {
-   
+
    }
 
   ngOnInit() {
@@ -35,7 +35,7 @@ export class UtilisateurPage implements OnInit {
       ()=> {
         this.chargerUser();
       });
-    
+
     this.credentials = this.fb.group({
       prenom: ['Ouly', [Validators.required, Validators.minLength(2)]],
       nom: ['fall', [Validators.required, Validators.minLength(2)]],
@@ -48,8 +48,8 @@ export class UtilisateurPage implements OnInit {
     });
   }
   async selectImage(): Promise<any> {
-  const  { Camera } = Plugins;  
-  const result = await Camera.getPhoto({ 
+  const  { Camera } = Plugins;
+  const result = await Camera.getPhoto({
     quality: 75,
     allowEditing: true,
     source: CameraSource.Photos,
@@ -78,12 +78,12 @@ export class UtilisateurPage implements OnInit {
     });
   }
 
-  async Ajouter(){ 
+  async Ajouter(){
     const loading = await this.loadingCtrl.create({
       message: 'Please wait...'
     });
     await loading.present();
-    
+
     let formData = new FormData();
     formData.append('prenom', this.credentials.value.prenom);
     formData.append('nom', this.credentials.value.nom);
@@ -104,7 +104,7 @@ export class UtilisateurPage implements OnInit {
         buttons: ['OK']
       });
     await alert.present();
-      
+
     },async err => {
       await loading.dismiss();
       const alert = await this.alertCtrl.create({
@@ -114,7 +114,7 @@ export class UtilisateurPage implements OnInit {
         buttons: ['OK']
       });
       await alert.present();
-      
+
     });
   }
 
@@ -148,7 +148,7 @@ export class UtilisateurPage implements OnInit {
               await alert.present();
             }, async(error) => {
               console.log(error);
-              
+
               await loading.dismiss();
               const alert = await this.alertCtrl.create({
                 header: 'Failed',
@@ -165,5 +165,29 @@ export class UtilisateurPage implements OnInit {
 
     await alert.present();
   }
+  //#region parti des getters
+  get email() {
+    return this.credentials.get('email');
+  }
+  get prenom() {
+    return this.credentials.get('prenom');
+  }
+  get nom() {
+    return this.credentials.get('nom');
+  }
+  get telephone() {
+    return this.credentials.get('telephone');
+  }
 
+  get genre() {
+    return this.credentials.get('genre');
+  }
+  get type() {
+    return this.credentials.get('type');
+  }
+
+  get adresse() {
+    return this.credentials.get('adresse');
+  }
+  //#endregion
 }

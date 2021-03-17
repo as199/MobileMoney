@@ -1,13 +1,21 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button>
-        <ion-icon name="home-sharp"></ion-icon>
-      </ion-menu-button>
-    </ion-buttons>
-    <ion-title>calculator</ion-title>
-  </ion-toolbar>
-</ion-header>
+
+  <ion-header>
+    <ion-toolbar>
+      <ion-item>
+        <ion-buttons slot="start">
+          <ion-menu-button>
+            <ion-icon name="home-sharp"></ion-icon>
+          </ion-menu-button>
+        </ion-buttons>
+        <ion-label class="centre">
+          Calculateur
+        </ion-label>
+        <ion-avatar slot="end">
+          <img src="../../../assets/img/logoSa.png">
+        </ion-avatar>
+      </ion-item>
+    </ion-toolbar>
+  </ion-header>
 
 <ion-content>
   <ion-grid fixed>
@@ -21,8 +29,10 @@
         <form (ngSubmit)="calculer()" [formGroup]="credentials">
           <section>
             <ion-item>
-              <ion-label position="floating">Type</ion-label>
-              <ion-input type="text" value="Depot"></ion-input>
+              <ion-label>Type</ion-label>
+              <ion-select value="depot">
+                <ion-select-option  value="depot">Dépot</ion-select-option>
+              </ion-select>
             </ion-item>
           </section>
           <section>
@@ -40,6 +50,6 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-  <!-- 
+  <!--
    -->
 </ion-content>

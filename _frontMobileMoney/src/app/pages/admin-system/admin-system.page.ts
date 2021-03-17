@@ -15,12 +15,14 @@ export class AdminSystemPage implements OnInit {
   today : Date = new Date();
   adminSystem = false;
   cacher = true;
+  avatar: string;
+  logo: any;
   constructor(private router: Router ,private authService: AuthenticationService,private alertController: AlertController) {
     this.pages = PagesADMINSYS;
-   
-    
+    this.logo = "../../../assets/img/logoSa.png";
+
   }
-  
+
 
   ngOnInit() {
 
@@ -31,17 +33,22 @@ export class AdminSystemPage implements OnInit {
       });
 
       this.authService.getMyRole().then(res =>{
-        console.log("le role est :",res);
         if (res === "ROLE_AdminSysteme"){
           this.adminSystem = true;
         }
-      })
-    
+      });
+
+    this.authService.getAvatar().then(res =>{
+      console.log("avatar: ",res);
+      this.avatar ="data:image/jpeg;base64,"+res;
+      //../../../assets/img/logoSa.png
+    })
+
   }
 
   afficher(){
     this.cacher= !this.cacher;
-    
+
   }
   GetSolde(){this.authService.getSolde().subscribe(
       (data) =>{
@@ -75,7 +82,7 @@ export class AdminSystemPage implements OnInit {
     });
 
     await alert.present();
-   
+
   }
 
 

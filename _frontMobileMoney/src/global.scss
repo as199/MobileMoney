@@ -12,6 +12,9 @@
 @media print{
   .doNotPrint{display:none !important;}
 }
+.errors{
+  color: #fa4b0c;
+}
 .alert-message.sc-ion-alert-md {
   font-size: 10px;
   font-weight: bold;

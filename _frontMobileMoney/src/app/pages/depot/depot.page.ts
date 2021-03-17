@@ -45,6 +45,7 @@ export class DepotPage implements OnInit {
   }
 
   async Create() {
+
   this.myTransaction.montant = this.credentials.value.montant;
   this.myTransaction.type = "depot";
   this.myTransaction.status = true;
@@ -138,17 +139,14 @@ export class DepotPage implements OnInit {
 
     await alert.present();
   }
-
+ //#region parti navigation
   previous(){
     this.etape = true;
   }
   next(){
     this.etape = false;
   }
-  get montant() {
-    return this.credentials.get('montant');
-  }
-
+//#endregion
   async calculFrais() {
     const loading = await this.loadingCtrl.create();
     await loading.present();
@@ -159,12 +157,42 @@ export class DepotPage implements OnInit {
         this.montantTotal = data.data + this.credentials.value.montant;
       },async(error) => {
         await loading.dismiss();
-          const alert = await this.alertCtrl.create({
-            header: 'Failed',
-            message: 'le montant doit etre superieur à 0',
-            buttons: ['OK']
-          });
-          await alert.present();
-        })
+        const alert = await this.alertCtrl.create({
+          header: 'Failed',
+          message: 'le montant doit etre superieur à 0',
+          buttons: ['OK']
+        });
+        await alert.present();
+      })
   }
+
+  //#region parti des getters
+  get montant() {
+    return this.credentials.get('montant');
+  }
+  get prenom() {
+    return this.credentials.get('clientenvoi').get('prenom');
+  }
+  get nom() {
+    return this.credentials.get('clientenvoi').get('nom');
+  }
+  get telephone() {
+    return this.credentials.get('clientenvoi').get('telephone');
+  }
+
+  get cni() {
+    return this.credentials.get('clientenvoi').get('cni');
+  }
+  get prenom1() {
+    return this.credentials.get('clientRetrait').get('prenom');
+  }
+  get nom1() {
+    return this.credentials.get('clientRetrait').get('nom');
+  }
+  get telephone1() {
+    return this.credentials.get('clientRetrait').get('telephone');
+  }
+//#endregion
+
+
 }

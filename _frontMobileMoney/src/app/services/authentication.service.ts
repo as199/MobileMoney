@@ -63,6 +63,7 @@ decoded: any;
     await Storage.set({key: TOKEN_KEY, value: token});
     await Storage.set({key: 'role', value: from['roles']});
     await Storage.set({key: 'telephone', value: from['telephone']});
+    await Storage.set({key: 'avatar', value: from['avatar']});
 
  }
  getToken(){
@@ -73,6 +74,14 @@ getRole(){
   return this.myRole;
 }
 
+async getAvatar() {
+  const avatar = await Storage.get({key: 'avatar'});
+  if (avatar && avatar.value) {
+    this.role = avatar.value;
+
+    return this.role;
+  }
+}
 async getMyRole(){
   const token = await Storage.get({key: 'role'});
   if (token && token.value){
