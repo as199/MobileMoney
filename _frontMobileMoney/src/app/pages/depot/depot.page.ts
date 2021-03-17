@@ -84,21 +84,48 @@ export class DepotPage implements OnInit {
              await loading.present();
             this.authService.Transaction(this.myTransaction).subscribe(
               async (data) => {
+                const result = data.data;
                 await loading.dismiss();
                 this.credentials.reset();
                 const alert = await this.alertCtrl.create({
-                  header: 'Succée',
-                  message: 'Transaction effectuée avec succée',
-                  buttons: ['OK']
+                  header: 'Transfert réussi',
+                  message: `<ion-card>
+                            <ion-item >
+                            <ion-label class="ion-text-wrap">
+                                 Vous avez envoyé ${result.montant} à  ${result.clientRetrait.nom} le ${result.dateEnvoi}
+                             </ion-label>
+                            </ion-item>
+                              <ion-item>
+                               <ion-label>Code de transaction</ion-label>
+                              </ion-item>
+                              <ion-item>${result.code} </ion-item>
+                            </ion-card-content>
+                          </ion-card>`,
+
+                  buttons: [{
+                    text: 'Retour',
+                    role: 'cancel',
+                    cssClass: 'doNotPrint',
+                    handler: () => {
+
+                    }
+                  },
+                    {
+                      text: 'imprimer',
+                      cssClass: 'doNotPrint',
+                      handler: () => {
+                        window.print();
+                      }
+                    }]
                 });
               await alert.present();
             }, async(error) => {
               console.log(error);
-              
+
               await loading.dismiss();
               const alert = await this.alertCtrl.create({
                 header: 'Failed',
-                cssClass: "my-custom-class",
+                cssClass: "my-custom-class-error",
                 message: error.error,
                 buttons: ['OK']
               });

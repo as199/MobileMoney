@@ -12,14 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=TransactionRepository::class)
  * * @ApiResource( itemOperations={"GET","PUT",
- *     "deleteTransaction":{
- *              "route_name"="deleteTransaction",
- *              "method":"DELETE",
- *              "path":"/transactions/delete",
- *              "denormalizationContext"={"groups"={"transaction:write"}},
- *              "access_control"="(is_granted('ROLE_UserAgence') or is_granted('ROLE_AdminAgence') )",
- *              "access_control_message"="Vous n'avez pas access à cette Ressource",
- *          },
+ *
  *     "findTransaction":{
  *              "route_name"="findTransaction",
  *              "method":"POST",
@@ -38,6 +31,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *              "access_control"="(is_granted('ROLE_UserAgence') or is_granted('ROLE_AdminAgence') )",
  *              "access_control_message"="Vous n'avez pas access à cette Ressource",
  *          },
+ *     "deleteTransaction":{
+ *              "route_name"="deleteTransaction",
+ *              "method":"POST",
+ *              "path":"/transactions/delete",
+ *              "denormalizationContext"={"groups"={"transaction:write"}},
+ *              "access_control"="(is_granted('ROLE_UserAgence') or is_granted('ROLE_AdminAgence') )",
+ *              "access_control_message"="Vous n'avez pas access à cette Ressource",
+ *          },
  *     "SoldeCompte":{
  *              "route_name"="SoldeCompte",
  *              "method":"POST",
@@ -49,13 +50,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *              "method":"GET",
  *              "path":"/transactions",
  *              "normalizationContext"={"groups"={"transaction:read"}},
- *              "access_control"="( is_granted('ROLE_AdminAgence') or is_granted('ROLE_UserAgence') )",
+ *              "access_control"="( is_granted('ROLE_AdminAgence') or is_granted('ROLE_AdminSysteme') or is_granted('ROLE_UserAgence') )",
  *              "access_control_message"="Vous n'avez pas access à cette Ressource",
  *          },
  *     "GetTransaction":{
  *              "method":"GET",
  *              "path":"/transactions/user",
- *              "access_control"="(is_granted('ROLE_UserAgence') or is_granted('ROLE_AdminAgence')  or is_granted('ROLE_Caissier') )",
+ *              "access_control"="(is_granted('ROLE_UserAgence') or is_granted('ROLE_AdminSysteme') or is_granted('ROLE_AdminAgence')  or is_granted('ROLE_Caissier') )",
  *              "access_control_message"="Vous n'avez pas access à cette Ressource",
  *          },
  *         "Calculer":{

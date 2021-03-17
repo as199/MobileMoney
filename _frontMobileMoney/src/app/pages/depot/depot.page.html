@@ -1,13 +1,15 @@
-<ion-header>
+<ion-header class="doNotPrint">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-menu-button>
+        <ion-icon name="home-sharp"></ion-icon>
+      </ion-menu-button>
     </ion-buttons>
     <ion-title>depot</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="doNotPrint">
   <ion-grid fixed>
     <ion-row>
       <ion-col  size="12" size-xs="12" size-sm="10" size-md="6" size-lg="6" offset-lg="3" offset-sm="1" offset-md="3">
@@ -24,7 +26,7 @@
         <form [formGroup]="credentials">
           <section *ngIf="etape">
             <ion-list>
-      
+
               <section formGroupName="clientenvoi">
                 <ion-item>
                   <ion-label position="floating">N° CNI</ion-label>
@@ -51,7 +53,7 @@
                 <ion-label position="floating">Frais</ion-label>
                 <ion-input type="text" disabled  [value]="frais" class="form-control" ></ion-input>
               </ion-item>
-      
+
             </ion-list>
             <ion-item class="total">
               <ion-label position="floating">Total</ion-label>

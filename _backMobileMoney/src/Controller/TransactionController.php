@@ -96,16 +96,13 @@ class TransactionController extends AbstractController
     /**
      * @Route("/api/transactions", name="addTransaction", methods={"POST"})
      * @param Request $request
-     * @return Response
+     * @return JsonResponse
      * @throws ExceptionInterface
      */
-    public function AddTransaction(Request $request): Response
+    public function AddTransaction(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
         $user = $this->tokenStorage->getToken()->getUser();
-
-
-
         $transaction = new Transaction();
         if ($data['type'] === 'depot') {
             $agence = $this->agenceRepository->findOneBy(['id' => $user->getAgence()->getId()]);
@@ -167,11 +164,11 @@ class TransactionController extends AbstractController
                         return $this->json(['message' => 'Ce transfert a  été retirer avec succè ', 'data'=>$transaction],200);
 
                 }else{
-                    return new JsonResponse("Ce transfert a été annulé", 400, [], true);
+                    return $this->json(['message' => "Ce transfert a été annulé"], 400);
                 }
 
             }else{
-                return new JsonResponse("Ce transfert a déja été retirer ", 400, [], true);
+                return $this->json(['message' => "Ce transfert a déja été retirer "], 400);
             }
 
     }
@@ -201,28 +198,31 @@ class TransactionController extends AbstractController
     public function DeleteTransaction(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        $transaction = $this->transactionRepository->findOneBy(['numero'=>$data['numero']]);
-        $idAgenceEnvoi = $transaction->getUserEnvoi()->getAgence()->getId();
-        $idAgenceAnnulation = $this->tokenStorage->getToken()->getUser()->getAgence()->getId();
-        if($idAgenceAnnulation === $idAgenceEnvoi){
-            if($transaction->getDateRetrait()=== null){
-                if($transaction->getDateAnnulation()=== null){
-                    $transaction->setDateAnnulation(new \DateTime);
-                    $compte = $transaction->getCompte();
-                    $compte->setSolde($compte->getSolde() + $transaction->getMontant());
-                    $this->manager->persist($transaction);
-                    $this->manager->flush();
-                    return new JsonResponse(" transaction annulle  avec succée", 200, [], true);
+        if ($transaction = $this->transactionRepository->findOneBy(['numero' => $data['numero']])) {
+            $idAgenceEnvoi = $transaction->getUserEnvoi()->getAgence()->getId();
+            $idAgenceAnnulation = $this->tokenStorage->getToken()->getUser()->getAgence()->getId();
+            if ($idAgenceAnnulation === $idAgenceEnvoi) {
+                if ($transaction->getDateRetrait() === null) {
+                    if ($transaction->getDateAnnulation() === null) {
+                        $transaction->setDateAnnulation(new \DateTime);
+                        $compte = $transaction->getCompte();
+                        $compte->setSolde($compte->getSolde() + $transaction->getMontant());
+                        $this->manager->persist($transaction);
+                        $this->manager->flush();
+                        return new JsonResponse(" transaction annulle  avec succée", 200, [], true);
 
-                }else{
-                    return new JsonResponse("Impossible d'annuler le depot car celle ci a deja ete annuler", 400, [], true);
+                    } else {
+                        return $this->json(['message' => "Impossible d'annuler le depot car celle ci a deja ete annuler"], 400);
+                    }
+
+                } else {
+                    return $this->json(['message' => "Impossible d'annuler le depot car l,argent a été déja retirer"], 400);
                 }
-
-            }else{
-                return new JsonResponse("Impossible d'annuler le depot car l,argent a été déja retirer", 400, [], true);
+            } else {
+                return $this->json(['message' => "Impossible d'annuler le depot car la transaction n'as pas été effectuer dans cette agence"], 400);
             }
-        }else{
-            return new JsonResponse("Impossible d'annuler le depot car la transaction n'as pas été effectuer dans cette agence", 400, [], true);
+        } else {
+            return $this->json(['message' => "Impossible d'annuler le depot car la transaction n'existe pas"], 400);
         }
     }
 
@@ -260,14 +260,28 @@ class TransactionController extends AbstractController
         $clientEnvoi = $transaction->getClientEnvoi();
         $clientRetrait = $transaction->getClientRecepteur();
         $data['montant'] = $transaction->getMontant();
-        $data['code'] = $transaction->getNumero();
+        $data['code1'] =$transaction->getNumero();
+        $data['code'] = $this->code($transaction->getNumero());
         $data['dateEnvoi'] = $transaction->getDateEnvoi()->format('Y-m-d');
         $data['clientEnvoi']['telephone'] = $clientEnvoi->getTelephone();
-        $data['clientEnvoi']['nom'] = $clientEnvoi->getPrenom().''.$clientEnvoi->getNom();
+        $data['clientEnvoi']['nom'] = $clientEnvoi->getPrenom().' '.$clientEnvoi->getNom();
         $data['clientRetrait']['telephone'] = $clientEnvoi->getTelephone();
-        $data['clientRetrait']['nom'] = $clientRetrait->getPrenom().''.$clientRetrait->getNom();
+        $data['clientRetrait']['nom'] = $clientRetrait->getPrenom().' '.$clientRetrait->getNom();
         return $data;
     }
+// (334) 781-4853 
+
+    private function code($str): string
+    {
+        if(strlen($str) == 9) {
+        $res = substr($str, 0, 3) .'-';
+        $res .= substr($str, 3, 3) .'-';
+        $res .= substr($str, 6, 9) ;
+
+        }
+        return $res;
+    }
+
 
 
 }

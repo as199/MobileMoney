@@ -1,23 +1,42 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-menu-button>
+        <ion-icon name="home-sharp"></ion-icon>
+      </ion-menu-button>
     </ion-buttons>
     <ion-title>transaction</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-grid fixed>
-    <ion-row>
-      <ion-col  size="12" size-xs="12" size-sm="10" size-md="6" size-lg="6" offset-lg="3" offset-sm="1" offset-md="3">
-        <ion-text color="dark">
-          <h5>Transactions</h5>
-        </ion-text>
+  <ion-grid >
+    <ion-row class="header-row">
+      <ion-col size="3" (click)="sortBy('date')">Date</ion-col>
+      <ion-col size="5"  tappable (click)="sortBy('user')">
+        Utilisateur
+        <ion-icon  name="arrow-down" *ngIf="sortDirectionuser == 1"></ion-icon>
+        <ion-icon  name="arrow-up" *ngIf="sortDirectionuser == 2"></ion-icon>
       </ion-col>
-      <ion-col  size="12" size-xs="12" size-sm="10" size-md="6" size-lg="6" offset-lg="3" offset-sm="1" offset-md="3">
-
+      <ion-col size="4"  (click)="sortBy('montant')">Montant
+        <ion-icon  name="arrow-down" *ngIf="sortDirectionmontant == 1"></ion-icon>
+        <ion-icon  name="arrow-up" *ngIf="sortDirectionmontant == 2"></ion-icon>
       </ion-col>
+<!--      <ion-col size="2" class="ion-hide-lg-down" >Phone</ion-col>-->
     </ion-row>
+
+    <ion-row *ngFor="let row of data; " tappable (click)="infos(row)">
+      <ion-col size="4" >{{row?.date}}</ion-col>
+      <ion-col size="4"  >
+        {{row?.nom}}
+      </ion-col>
+      <ion-col size="4" >{{row?.montant}}</ion-col>
+      <!-- <ion-col size="2" class="ion-hide-lg-down" >Phone</ion-col>-->
+    </ion-row>
+
   </ion-grid>
 </ion-content>
+
+
+<p></p>
+<br>

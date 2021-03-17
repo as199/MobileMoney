@@ -8,6 +8,10 @@
  * For more information on global stylesheets, visit the documentation:
  * https://ionicframework.com/docs/layout/global-stylesheets
  */
+
+@media print{
+  .doNotPrint{display:none !important;}
+}
 .alert-message.sc-ion-alert-md {
   font-size: 10px;
   font-weight: bold;

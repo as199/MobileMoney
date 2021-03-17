@@ -27,7 +27,7 @@ export class RetraitPage implements OnInit {
     private fb: FormBuilder,
     private alertCtrl: AlertController,
     private loadingCtrl: LoadingController
-    ) { 
+    ) {
       this.myTransaction = {} as Transaction;
     }
 
@@ -55,7 +55,7 @@ export class RetraitPage implements OnInit {
  async Recherche() {
     const loading = await this.loadingCtrl.create();
     await loading.present();
-    
+
     let num = this.credentials.value.code;
     this.authService.findTransactionByCode(this.credentials.value).subscribe(
       async (data) =>{
@@ -72,6 +72,7 @@ export class RetraitPage implements OnInit {
       await loading.dismiss();
         const alert = await this.alertCtrl.create({
           header: 'Failed',
+          cssClass: 'my-custom-class-error',
           message: 'Ce code de transfert n\'existe pas',
           buttons: ['OK']
         });
@@ -81,7 +82,7 @@ export class RetraitPage implements OnInit {
 
 async retirer(){
   console.log(this.credentials.value);
-  
+
   const alert = await this.alertCtrl.create({
     cssClass: 'my-custom-class',
     header: 'Confirmation',

@@ -26,7 +26,7 @@ decoded: any;
   constructor(private http: HttpClient, private router: Router) {
     this.loadToken();
   }
-  
+
   get refresh$(): any{
     return this._refresh$;
   }
@@ -77,7 +77,7 @@ async getMyRole(){
   const token = await Storage.get({key: 'role'});
   if (token && token.value){
      this.role = token.value;
-    
+
    return this.role;
   }
 }
@@ -103,7 +103,17 @@ RedirectMe(role: string){
   }
 
   Transaction(data: Transaction): Observable<any>{
-    return this.http.post(`${this.url}/transactions`,data);
+    return this.http.post(`${this.url}/transactions`,data).pipe(
+      tap(() => {
+        this._refresh$.next();
+      }));
+  }
+
+  annulerTransaction(numero:any): Observable<any>{
+    return this.http.post(`${this.url}/transactions/delete`, numero).pipe(
+      tap(() => {
+        this._refresh$.next();
+      }));;
   }
 
   findTransactionByCode(code: string): Observable<any>{
@@ -115,10 +125,7 @@ RedirectMe(role: string){
   }
 
   getSolde(data: string= "sal"): Observable<any>{
-    return this.http.post(`${this.url}/transactions/solde`,data).pipe(
-      tap(() => {
-        this._refresh$.next();
-      }));
+    return this.http.post(`${this.url}/transactions/solde`,data);
   }
 
   AddAgence(agence: any): Observable<any>{
@@ -130,11 +137,14 @@ RedirectMe(role: string){
     }
 
   DeleteAgence(id: number): Observable<any>{
-    return this.http.delete(`${this.url}/agences/${id}`,);
+    return this.http.delete(`${this.url}/agences/${id}`).pipe(
+      tap(() => {
+        this._refresh$.next();
+      }));
   }
 
   GetAgence(): Observable<any>{
-    return this.http.get(`${this.url}/agences`,);
+    return this.http.get<any>(`${this.url}/agences`);
   }
 
 
@@ -144,6 +154,12 @@ RedirectMe(role: string){
 
   AddUser(user: any): Observable<any>{
     return this.http.post(`${this.url}/adminSys/utilisateurs`,user);
+  }
+  deleteUser(id: number): Observable<any>{
+    return this.http.delete(`${this.url}/adminSys/utilisateurs/${id}`).pipe(
+      tap(() => {
+        this._refresh$.next();
+      }));
   }
 
   GetUserNotAgence(): Observable<any>{
@@ -156,5 +172,10 @@ RedirectMe(role: string){
   GetDepot(): Observable<any>{
     return this.http.get<any>(`${this.url}/depots`);
   }
- 
+
+
+  deleteDepot(id: number): Observable<any>{
+    return this.http.delete<any>(`${this.url}/depots/${id}`);
+  }
+
 }

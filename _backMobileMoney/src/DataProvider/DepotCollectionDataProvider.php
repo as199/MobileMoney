@@ -60,6 +60,7 @@ class DepotCollectionDataProvider implements ContextAwareCollectionDataProviderI
             $data[$key]['date'] = $depot->getCreatedAt()->format('Y-m-d à H:i:s');
             $data[$key]['montant'] = $depot->getMontant();
             $data[$key]['numero'] = $depot->getId();
+            $data[$key]['compte'] = $depot->getCompte()->getNumCompte();
             $data[$key]['auteur'] = $depot->getUtilisateur()->getNomComplet();
         }
 

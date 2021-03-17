@@ -13,6 +13,8 @@ export class AdminSystemPage implements OnInit {
   pages: any = [];
   montant= 0;
   today : Date = new Date();
+  adminSystem = false;
+  cacher = true;
   constructor(private router: Router ,private authService: AuthenticationService,private alertController: AlertController) {
     this.pages = PagesADMINSYS;
    
@@ -21,11 +23,24 @@ export class AdminSystemPage implements OnInit {
   
 
   ngOnInit() {
+
     this.GetSolde();
-    // this.authService.refresh$.subscribe(
-    //   ()=> {
-    //     this.GetSolde();
-    //   });
+    this.authService.refresh$.subscribe(
+      ()=> {
+        this.GetSolde();
+      });
+
+      this.authService.getMyRole().then(res =>{
+        console.log("le role est :",res);
+        if (res === "ROLE_AdminSysteme"){
+          this.adminSystem = true;
+        }
+      })
+    
+  }
+
+  afficher(){
+    this.cacher= !this.cacher;
     
   }
   GetSolde(){this.authService.getSolde().subscribe(

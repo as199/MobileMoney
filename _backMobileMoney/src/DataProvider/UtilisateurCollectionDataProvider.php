@@ -51,7 +51,7 @@ class UtilisateurCollectionDataProvider implements ContextAwareCollectionDataPro
             $data = array();
             $i = 0;
             foreach($users as $key => $user ){
-
+                if($user->getStatus() == false){
                     $data[$i]['id'] = $user->getId();
                     $data[$i]['nom'] = ucfirst(strtolower($user->getNomComplet()));
                     $data[$i]['telephone'] = $user->getTelephone();
@@ -74,6 +74,7 @@ class UtilisateurCollectionDataProvider implements ContextAwareCollectionDataPro
                     }
                     $data[$i]['type'] = $type;
                     $i++;
+                }
                 
             }
             return new JsonResponse(['data'=>$data],200);

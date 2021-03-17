@@ -31,6 +31,11 @@ export class UtilisateurPage implements OnInit {
   ngOnInit() {
     this.chargerAgence();
     this.chargerUser();
+     this.authService.refresh$.subscribe(
+      ()=> {
+        this.chargerUser();
+      });
+    
     this.credentials = this.fb.group({
       prenom: ['Ouly', [Validators.required, Validators.minLength(2)]],
       nom: ['fall', [Validators.required, Validators.minLength(2)]],
@@ -113,5 +118,52 @@ export class UtilisateurPage implements OnInit {
     });
   }
 
+  async delete(id: any){
+    const alert = await this.alertCtrl.create({
+      cssClass: 'my-custom-class',
+      header: 'Confirmation',
+      message: `Etes vous sur de vouloir supprimer cette utilisateur ?`,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Ok',
+          handler: async () => {
+            const loading = await this.loadingCtrl.create();
+             await loading.present();
+            this.authService.deleteUser(id).subscribe(
+              async (data) => {
+                await loading.dismiss();
+                this.credentials.reset();
+                const alert = await this.alertCtrl.create({
+                  header: 'Succée',
+                  message: 'Utilisateur  supprimer avec succée',
+                  buttons: ['OK']
+                });
+              await alert.present();
+            }, async(error) => {
+              console.log(error);
+              
+              await loading.dismiss();
+              const alert = await this.alertCtrl.create({
+                header: 'Failed',
+                cssClass: "my-custom-class",
+                message: 'Erreur lors de la suppression de l \'utilisateur',
+                buttons: ['OK']
+              });
+              await alert.present();
+            })
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
 
 }

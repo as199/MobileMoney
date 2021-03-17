@@ -2,7 +2,9 @@
   <ion-toolbar>
     <ion-item>
       <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
+        <ion-menu-button>
+          <ion-icon name="home-sharp"></ion-icon>
+        </ion-menu-button>
       </ion-buttons>
       <ion-avatar class="centre">
         <img src="../../../assets/img/logoSa.png">
@@ -21,8 +23,9 @@
         <ion-card><ion-card-content>
           <ion-label>Mon sole disponible</ion-label>
            <ion-item>
-             <ion-label>{{montant}} cfa</ion-label>
-             <ion-icon name="eye-off-outline" slot="end"></ion-icon>
+             <ion-label *ngIf="cacher">{{montant}} cfa</ion-label>
+             <ion-icon (click)="afficher()" *ngIf="cacher" tappable name="eye-off-outline" slot="end"></ion-icon>
+             <ion-icon (click)="afficher()" *ngIf="!cacher" tappable name="eye" slot="end"></ion-icon>
            </ion-item>
            <ion-label>mise à jour le {{ today | date: "dd/MM/yyyy à H:mm:ss" }} </ion-label>
          </ion-card-content>
@@ -30,9 +33,43 @@
       </ion-col>
       <ion-col size="12" size-xs="12" size-sm="10" size-md="6" size-lg="6" offset-lg="3" offset-sm="1" offset-md="3">
         <ion-list>
-          <ion-item tappable *ngFor="let p of pages" (click)="onItemClick(p.url)" routerDirection="root">
-            <ion-icon [name]="p.iconName"  color="danger"></ion-icon>&nbsp;
-            {{p.title}}
+
+          <ion-item tappable  (click)="onItemClick('/depot')" routerDirection="root">
+            <ion-icon name="arrow-redo-outline"  color="danger"></ion-icon>&nbsp;
+            Depot
+            <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+          </ion-item>
+
+          <ion-item tappable  (click)="onItemClick('/retrait')" routerDirection="root">
+            <ion-icon name="arrow-undo-outline"  color="danger"></ion-icon>&nbsp;
+            Retrait
+            <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+          </ion-item>
+          <ion-item tappable (click)="onItemClick('/transaction')" routerDirection="root">
+            <ion-icon name="analytics"  color="danger"></ion-icon>&nbsp;
+            Mes Transactions
+            <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+          </ion-item>
+          <section *ngIf="adminSystem">
+            <ion-item tappable (click)="onItemClick('/transaction')" routerDirection="root">
+              <ion-icon name="analytics"  color="danger"></ion-icon>&nbsp;
+              Tous les transactions
+              <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+            </ion-item>
+            <ion-item tappable (click)="onItemClick('/commission')" routerDirection="root">
+              <ion-icon name="apps-outline"  color="danger"></ion-icon>&nbsp;
+              Mes commissions
+              <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+            </ion-item>
+          </section>
+          <ion-item tappable (click)="onItemClick('/calculator')" routerDirection="root">
+            <ion-icon name="calculator"  color="danger"></ion-icon>&nbsp;
+            Calculateur de frais
+            <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+          </ion-item>
+          <ion-item tappable  (click)="onItemClick('/annuler-depot')" routerDirection="root">
+            <ion-icon class="deleted" color="danger" name="trash-outline"></ion-icon>&nbsp;
+            Annuler depot
             <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
           </ion-item>
           <ion-item tappable (click)="logout()">
@@ -54,7 +91,7 @@
   </ion-card>
   <ion-list>
       <ion-item tappable *ngFor="let p of pages" (click)="onItemClick(p.url)" routerDirection="root">
-        <ion-icon [name]="p.iconName"  color="danger"></ion-icon>&nbsp;
+        <ion-icon name="p.iconName"  color="danger"></ion-icon>&nbsp;
         {{p.title}}
         <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
       </ion-item>

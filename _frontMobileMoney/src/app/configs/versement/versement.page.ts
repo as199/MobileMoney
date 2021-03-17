@@ -9,9 +9,10 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
   styleUrls: ['./versement.page.scss'],
 })
 export class VersementPage implements OnInit {
-visible: boolean = false;
+visible: boolean = true;
   comptes: any;
   credentials: FormGroup;
+  depots: any;
   constructor(
     private authService: AuthenticationService,
     private fb: FormBuilder,
@@ -41,17 +42,31 @@ visible: boolean = false;
     }
   );
   }
-
+  previous(){
+    this.visible =true;
+  }
+  next(){
+    this.visible =false;
+  }
   
-  ngOnInit() {
-    console.log(this.visible);
-    
+  ngOnInit(){
    this.getComptes();
+   this.chargerDepot();
     
     this.credentials = this.fb.group({
       montant: ['', [Validators.required, Validators.min(1)]],
       comptes: ['', [Validators.required]],
     });
+  }
+
+  chargerDepot(){
+    this.authService.GetDepot().subscribe(
+      (data) =>{
+        this.depots = data.data;
+        console.log(data);
+        
+      }
+    )
   }
 
   async Verser(){
@@ -108,6 +123,57 @@ visible: boolean = false;
    
       
     
+  }
+
+  async delete(id){
+    console.log(id);
+    
+    const alert = await this.alertCtrl.create({
+      cssClass: 'my-custom-class',
+      header: 'Confirmation',
+      message: `Etes vous sur de vouloir supprimer cette transactions ?`,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+          }
+        }, {
+          text: 'Confirmer',
+          handler: async () => {
+            const loading = await this.loadingCtrl.create();
+             await loading.present();
+            this.authService.deleteDepot(id).subscribe(
+              async (data) => {
+                console.log(data);
+                
+                await loading.dismiss();
+                this.credentials.reset();
+                const alert = await this.alertCtrl.create({
+                  header: 'Succée',
+                  message: 'Dépot  supprimer avec succée',
+                  buttons: ['OK']
+                });
+              await alert.present();
+            }, async(error) => {
+              console.log(error);
+              
+               await loading.dismiss();
+              const alert = await this.alertCtrl.create({
+                header: 'Failed',
+                cssClass: "my-custom-class",
+                message: 'Erreur lors de la suppression du Dépot',
+                buttons: ['OK']
+              });
+              await alert.present();
+            })
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
 }

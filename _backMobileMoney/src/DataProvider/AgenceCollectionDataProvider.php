@@ -44,6 +44,7 @@ class AgenceCollectionDataProvider implements ContextAwareCollectionDataProvider
         $data = array();
         foreach ($agences as $key => $agence){
             
+            if($agence->getStatus() == false){
             $data[$key]["nom"] = $agence->getNomAgence();
             $data[$key]["id"] = $agence->getId();
             if($compte = $this->compteRepository->findOneBy(['id'=>$agence->getCompte()->getId()])){
@@ -52,7 +53,8 @@ class AgenceCollectionDataProvider implements ContextAwareCollectionDataProvider
                 $data[$key]["adresse"]= $agence->getAdresse();
             }
         }
-        return new JSONResponse(['data'=>$data],200);
+        }
+        return new JSONResponse($data);
 
        // gné kanolé
     }

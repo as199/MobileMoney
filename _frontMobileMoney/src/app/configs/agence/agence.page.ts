@@ -13,7 +13,7 @@ export class AgencePage implements OnInit {
   visible: boolean = true;
   credentials: FormGroup;
   users: any;
-  agences: any;
+  agence = [];
 
   constructor(
     private authService: AuthenticationService,
@@ -21,12 +21,17 @@ export class AgencePage implements OnInit {
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
     private toastCtrl: ToastController
-  ) { 
+  ) {
+
     this.chargerUser();
   }
 
   ngOnInit() {
     this.chargerAgence();
+    this.authService.refresh$.subscribe(
+      ()=> {
+        this.chargerAgence();
+      });
 
     this.credentials = this.fb.group({
       nomAgence: ['', [Validators.required, Validators.min(1)]],
@@ -37,23 +42,13 @@ export class AgencePage implements OnInit {
 
   chargerUser(){
     this.authService.GetUserNotAgence().subscribe((data) => {
-      console.log(data);
-      
-      this.users = data.data;
-    },err => {
-      console.log(err);
-      
+     this.users = data.data;
     });
   }
 
   chargerAgence(){
     this.authService.GetAgence().subscribe((data) => {
-      console.log(data);
-      
-      this.agences = data.data;
-    },err => {
-      console.log(err);
-      
+     this.agence= data;
     });
   }
 
@@ -79,17 +74,60 @@ export class AgencePage implements OnInit {
       });
     await alert.present();
     },async err => {
-      console.log(err);
-      
       await loading.dismiss();
+      const alert = await this.alertCtrl.create({
+        header: 'Failed',
+        cssClass: "my-custom-class",
+        message: 'Erreur de creation de l\'agence ',
+        buttons: ['OK']
+      });
+      await alert.present();
+    });
+  }
+
+   async delete(id){
+     const alert = await this.alertCtrl.create({
+      cssClass: 'my-custom-class',
+      header: 'Confirmation',
+      message: `Etes vous sur de vouloir supprimer cette utilisateur ?`,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+          }
+        }, {
+          text: 'Ok',
+          handler: async () => {
+            const loading = await this.loadingCtrl.create();
+             await loading.present();
+            this.authService.DeleteAgence(id).subscribe(
+              async (data) => {
+                await loading.dismiss();
+                this.credentials.reset();
+                const alert = await this.alertCtrl.create({
+                  header: 'Succée',
+                  message: 'Utilisateur  supprimer avec succée',
+                  buttons: ['OK']
+                });
+              await alert.present();
+            }, async(error) => {
+               await loading.dismiss();
               const alert = await this.alertCtrl.create({
                 header: 'Failed',
                 cssClass: "my-custom-class",
-                message: 'Erreur de creation de l\'agence ',
+                message: 'Erreur lors de la suppression de l \'utilisateur',
                 buttons: ['OK']
               });
               await alert.present();
-    });  
+            })
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
 }

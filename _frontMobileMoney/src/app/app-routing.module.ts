@@ -87,6 +87,10 @@ const routes: Routes = [
   {
     path: 'versement',
     loadChildren: () => import('./configs/versement/versement.module').then( m => m.VersementPageModule)
+  },
+  {
+    path: 'annuler-depot',
+    loadChildren: () => import('./pages/annuler-depot/annuler-depot.module').then( m => m.AnnulerDepotPageModule)
   }
 ];
 
