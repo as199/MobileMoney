@@ -91,6 +91,10 @@ const routes: Routes = [
   {
     path: 'annuler-depot',
     loadChildren: () => import('./pages/annuler-depot/annuler-depot.module').then( m => m.AnnulerDepotPageModule)
+  },
+  {
+    path: 'profil',
+    loadChildren: () => import('./pages/profil/profil.module').then( m => m.ProfilPageModule)
   }
 ];
 

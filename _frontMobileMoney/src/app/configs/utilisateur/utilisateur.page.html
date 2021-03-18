@@ -1,11 +1,18 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button>
-        <ion-icon name="home-sharp"></ion-icon>
-      </ion-menu-button>
-    </ion-buttons>
-    <ion-title>utilisateur</ion-title>
+    <ion-item>
+      <ion-buttons slot="start">
+        <ion-menu-button>
+          <ion-icon name="home-sharp"></ion-icon>
+        </ion-menu-button>
+      </ion-buttons>
+      <ion-label class="centre">
+        Utilisateur
+      </ion-label>
+      <ion-avatar slot="end">
+        <img src="../../../assets/img/logoSa.png">
+      </ion-avatar>
+    </ion-item>
   </ion-toolbar>
 </ion-header>
 
@@ -114,7 +121,7 @@
          <ion-card>
           <ion-card-header>
             <ion-card-subtitle>
-              <ion-icon class="deleted"  tappable (click)="delete(a.value.id)" color="danger" name="trash-outline"></ion-icon>
+              <ion-icon class="deleted"  tappable (click)="delete(u.id)" color="danger" name="trash-outline"></ion-icon>
             </ion-card-subtitle>
             <ion-card-title>{{u?.nom}}</ion-card-title>
           </ion-card-header>

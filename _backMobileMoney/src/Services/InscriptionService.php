@@ -59,7 +59,7 @@ class InscriptionService
     public function NewUser(Request $request){
         
        $userReq = $request->request->all();
-        $nomComplet = $userReq['prenom'].''.$userReq['nom'];
+        $nomComplet = $userReq['prenom'].' '.$userReq['nom'];
         $profil = $userReq['type'];
         $uploadedFile = $request->files->get('avatar');
         if(isset($userReq['agences'])){

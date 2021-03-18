@@ -1,11 +1,18 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button>
-        <ion-icon name="home-sharp"></ion-icon>
-      </ion-menu-button>
-    </ion-buttons>
-    <ion-title>versement</ion-title>
+    <ion-item>
+      <ion-buttons slot="start">
+        <ion-menu-button>
+          <ion-icon name="home-sharp"></ion-icon>
+        </ion-menu-button>
+      </ion-buttons>
+      <ion-label class="centre">
+        Versement
+      </ion-label>
+      <ion-avatar slot="end">
+        <img src="../../../assets/img/logoSa.png">
+      </ion-avatar>
+    </ion-item>
   </ion-toolbar>
 </ion-header>
 
@@ -23,7 +30,7 @@
         <ion-col size="12" size-xs="12" size-sm="10" size-md="6" size-lg="6" offset-lg="3" offset-sm="1" offset-md="3">
           <form  [formGroup]="credentials" (ngSubmit)="Verser()">
             <ion-list>
-              <ion-item *ngIf="visible">                                                                                                                                                                                                                                                                                                                            
+              <ion-item *ngIf="visible">
               <ion-label position="stacked">COMPTE</ion-label>
               <ion-select placeholder="Select One" formControlName="comptes"  interface="popover">
                 <ion-select-option [value]="c?.id" *ngFor="let c of comptes">{{c?.numCompte}}</ion-select-option>
@@ -33,15 +40,15 @@
               <ion-label position="stacked">Montant</ion-label>
               <ion-input type="number" formControlName="montant" placeholder="placeholder"></ion-input>
             </ion-item>
-            
+
             </ion-list>
             <section>
               <ion-button expand="block" type="submit">Deposer</ion-button>
             </section>
           </form>
         </ion-col>
-       
-      
+
+
     </ion-row>
   </ion-grid>
   <ion-grid  *ngIf="!visible">
@@ -54,13 +61,13 @@
             </ion-card-subtitle>
             <ion-card-title> Depot N° {{u?.numero}}</ion-card-title>
           </ion-card-header>
-          <ion-card-content> 
+          <ion-card-content>
             <section *ngIf="u?.visible">
               <strong>Auteur : </strong> {{u?.nom}} <br>
             </section>
-            <strong>N° Compte : </strong> {{u?.compte}} <br> 
-            <strong>Montant : </strong> {{u?.montant}} <br> 
-            <strong>Date  : </strong> {{u?.date}} <br> 
+            <strong>N° Compte : </strong> {{u?.compte}} <br>
+            <strong>Montant : </strong> {{u?.montant}} <br>
+            <strong>Date  : </strong> {{u?.date}} <br>
           </ion-card-content>
         </ion-card>
       </ion-col>

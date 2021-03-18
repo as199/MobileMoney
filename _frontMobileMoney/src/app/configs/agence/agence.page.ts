@@ -14,6 +14,7 @@ export class AgencePage implements OnInit {
   credentials: FormGroup;
   users: any;
   agence = [];
+  avatar: string;
 
   constructor(
     private authService: AuthenticationService,
@@ -38,6 +39,8 @@ export class AgencePage implements OnInit {
       adresse: ['', [Validators.required]],
       userAgence: [, []]
     });
+
+
   }
 
   chargerUser(){

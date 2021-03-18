@@ -63,6 +63,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *               "method":"POST",
  *               "path":"/calculer",
  *               "route_name"="addCalcul"
+ *          },
+ *      "DeCalculer":{
+ *               "method":"POST",
+ *               "path":"/decalculer",
+ *               "route_name"="deCalcul"
  *          }
  *     })
  */

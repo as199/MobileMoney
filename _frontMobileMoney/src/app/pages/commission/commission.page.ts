@@ -19,22 +19,23 @@ export class CommissionPage implements OnInit {
   sortDirectionfrais = 0;
   sortDirectiontype = 0;
   sortKey = null;
+  avatar: string;
   constructor(private authService: AuthenticationService) {
     this.loadData();
   }
 
   ngOnInit() {
+
+
   }
 
 
- 
+
 
   loadData(){
     this.authService.MesTransactions().subscribe(
       res => {
-        console.log(res);
         this.data = res.data;
-        this.sort();
       });
   }
 
@@ -42,24 +43,8 @@ export class CommissionPage implements OnInit {
     this.sortKey = key;
     if(key === "user"){
       this.sortDirectionuser ++;
-      this.sort();
     }
   }
 
-  sort() {
-    if(this.sortDirectionuser == 1){
-      this.data = this.data.sort((a, b)=>{
-        console.log('a: ', a);
-        const valA = a[this.sortKey];
-        const valB = b[this.sortKey];
-        return valA.localeCompare(valB);
-      });
-    }else if(this.sortDirectionuser == 2){
-
-    }else{
-      this.sortDirectionuser = 0;
-      this.sortKey = null;
-    }
-  }
 
 }

@@ -47,6 +47,33 @@ class CalculFraisService
 
         }
         return $frais;
+        // 500 -> 425 = 925
+    }
+
+
+    public function DeCalcFrais($montant){
+       // $data =[];
+       //$frais=  $this->CalcFrais($montant);
+        $datas = $this->tarifRepository->findAll();
+        $frais = 0;
+        $data =[];
+        foreach ($datas as $value){
+            if($montant>=2000000){
+                $frais = ($value->getFraisEnvoi()*$montant)/100;
+            }else{
+                switch($montant){
+                    case $montant>= $value->getMontantMIn() && $montant<$value->getMontantMax():
+                        $frais = $value->getFraisEnvoi();
+                        break;
+                }
+            }
+
+
+        }
+        $data['frais'] = $frais;
+        $data['montantSend'] = $montant - $frais;
+        return $data;
+        // 500 -> 425 = 925
     }
 
     public function CalcPart($montant): array

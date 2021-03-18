@@ -22,12 +22,12 @@ export const PagesADMINSYS: any[] = [
   }, {
     title: 'Mes commissions',
     tabName: 'commission',
-    url: '/commission',
+    url: '/tabs-admin/commission',
     iconName: 'apps-outline',
   },{
     title: 'Calculateur de frais',
     tabName: 'calculator',
-    url: '/calculator',
+    url: '/tabs-admin/calculator',
     iconName: 'calculator',
   }
 ];

@@ -17,6 +17,7 @@ export class UtilisateurPage implements OnInit {
   image: SafeResourceUrl;
   myimg: any;
   users: any;
+  avatar: string;
   constructor(
     private authService: AuthenticationService,
     private fb: FormBuilder,
@@ -46,6 +47,8 @@ export class UtilisateurPage implements OnInit {
       adresse: ['dakar', [Validators.required]],
       agences: ['', []]
     });
+
+
   }
   async selectImage(): Promise<any> {
   const  { Camera } = Plugins;
@@ -74,6 +77,7 @@ export class UtilisateurPage implements OnInit {
 
   chargerUser(){
     this.authService.GetAllUsers().subscribe((data) => {
+      console.log(data);
       this.users = data.data;
     });
   }

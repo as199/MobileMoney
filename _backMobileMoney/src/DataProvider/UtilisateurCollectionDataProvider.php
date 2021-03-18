@@ -56,7 +56,11 @@ class UtilisateurCollectionDataProvider implements ContextAwareCollectionDataPro
                     $data[$i]['nom'] = ucfirst(strtolower($user->getNomComplet()));
                     $data[$i]['telephone'] = $user->getTelephone();
                     $data[$i]['email'] = ucfirst(strtolower($user->getEmail()));
+                if($user->getAgence() == null){
+                    $data[$i]['agence'] ="Néant";
+                    }else{
                     $data[$i]['agence'] =ucfirst(strtolower( $user->getAgence()->getNomAgence()));
+                    }
                     $type =" ";
                     if($user->getProfil()->getLibelle() === "AdminSysteme"){
                         $data[$i]['visible'] = false;

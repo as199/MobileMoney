@@ -39,10 +39,9 @@ export class AdminSystemPage implements OnInit {
       });
 
     this.authService.getAvatar().then(res =>{
-      console.log("avatar: ",res);
       this.avatar ="data:image/jpeg;base64,"+res;
       //../../../assets/img/logoSa.png
-    })
+    });
 
   }
 

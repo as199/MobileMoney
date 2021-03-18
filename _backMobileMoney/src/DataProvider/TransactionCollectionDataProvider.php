@@ -9,6 +9,7 @@ use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Entity\Transaction;
 use App\Repository\ClientRepository;
 use App\Repository\TransactionRepository;
+use App\Repository\UtilisateurRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -26,19 +27,26 @@ class TransactionCollectionDataProvider implements ContextAwareCollectionDataPro
      * @var ClientRepository
      */
     private ClientRepository $clientRepository;
+    /**
+     * @var UtilisateurRepository
+     */
+    private UtilisateurRepository $utilisateurRepository;
 
     /**
      * TransactionCollectionDataProvider constructor.
      * @param TokenStorageInterface $tokenStorage
      * @param TransactionRepository $transactionRepository
      * @param ClientRepository $clientRepository
+     * @param UtilisateurRepository $utilisateurRepository
      */
     public function __construct(TokenStorageInterface $tokenStorage,
                                 TransactionRepository $transactionRepository,
-                                ClientRepository $clientRepository
+                                ClientRepository $clientRepository,
+                                UtilisateurRepository $utilisateurRepository
     )
     {
         $this->tokenStorage = $tokenStorage;
+        $this->utilisateurRepository = $utilisateurRepository;
         $this->transactionRepository = $transactionRepository;
         $this->clientRepository = $clientRepository;
     }
@@ -51,56 +59,68 @@ class TransactionCollectionDataProvider implements ContextAwareCollectionDataPro
     public function getCollection(string $resourceClass, string $operationName = null, array $context = []): JSONResponse
     {
         $data = [];
-        
+        $t = 0;
         if($this->tokenStorage->getToken()->getUser()->getRoles()[0] === "ROLE_AdminSysteme"){
             $transactions =  $this->transactionRepository->findAll();
-           
+           $i =0 ;
             foreach($transactions as $key => $transaction){
-                $data[$key]['ttc'] = $transaction->getTotalCommission();
-                $data[$key]['montant'] = $transaction->getMontant();
-                $data[$key]['id'] = $transaction->getId();
+
                if($transaction->getDateEnvoi() !=null){
-                  $data[$key]['date'] = $transaction->getDateEnvoi()->format('Y-m-d ');
-                  $data[$key]['commission'] = $transaction->getCommissionDepot();
-                  $data[$key]['type'] = "depot";
-                  $client = $this->clientRepository->findOneBy(['id'=>$transaction->getClientEnvoi()->getId()]);
-                  $data[$key]['nom'] = $client->getPrenom() ." ".$client->getNom();
+                   $data[$i]['ttc'] = $transaction->getTotalCommission();
+                   $data[$i]['montant'] = $transaction->getMontant();
+                   $data[$i]['id'] = $transaction->getId();
+                  $data[$i]['date'] = $transaction->getDateEnvoi()->format('Y-m-d ');
+                  $data[$i]['commission'] = $transaction->getCommissionDepot();
+                  $data[$i]['type'] = "depot";
+                  $client = $this->utilisateurRepository->findOneBy(['id'=>$transaction->getUserEnvoi()->getId()]);
+                  $data[$i]['nom'] = $client->getNomComplet();
                }
-               if($transaction->getDateRetrait() !=null){
-                  // dd($transaction);
-                $data[$key]['date'] = $transaction->getDateRetrait()->format('Y-m-d');
-                $data[$key]['commission'] = $transaction->getCommissionRetrait();
-                $data[$key]['type'] = "retrait";
-                $client = $this->clientRepository->findOneBy(['id'=>$transaction->getClientRecepteur()->getId()]);
-                $data[$key]['nom'] = $client->getPrenom() ." ".$client->getNom();
-                
-             }
+
+               $i++;
+               $t++;
+            }
+            foreach($transactions as $key => $transaction){
+
+                if($transaction->getDateRetrait() !=null){
+                    $data[$i]['ttc'] = $transaction->getTotalCommission();
+                    $data[$i]['montant'] = $transaction->getMontant();
+                    $data[$i]['id'] = $transaction->getId();
+                    // dd($transaction);
+                    $data[$i]['date'] = $transaction->getDateRetrait()->format('Y-m-d');
+                    $data[$i]['commission'] = $transaction->getCommissionRetrait();
+                    $data[$i]['type'] = "retrait";
+                    $client = $this->utilisateurRepository->findOneBy(['id'=>$transaction->getUserRetrait()->getId()]);
+                    $data[$i]['nom'] = $client->getNomComplet();
+
+                }
+                $i++;
+                $t++;
             }
            
         }else{
             $user = $this->tokenStorage->getToken()->getUser()->getId();
             $transactions = $this->transactionRepository->findBy(['userEnvoi'=>$user]);
+
             $transactionsR = $this->transactionRepository->findBy(['userRetrait'=>$user]);
             foreach($transactions as $key => $transaction){
-                $data[$key]['ttc'] = $transaction->getTotalCommission();
-                $data[$key]['montant'] = $transaction->getMontant();
+                $data[$t]['ttc'] = $transaction->getTotalCommission();
+                $data[$t]['montant'] = $transaction->getMontant();
                if($transaction->getDateEnvoi() !=null){
-                  $data[$key]['date'] = $transaction->getDateEnvoi()->format('Y-m-d');
-                  $data[$key]['commission'] = $transaction->getCommissionDepot();
-                  $data[$key]['type'] = "depot";
+                  $data[$t]['date'] = $transaction->getDateEnvoi()->format('Y-m-d');
+                  $data[$t]['commission'] = $transaction->getCommissionDepot();
+                  $data[$t]['type'] = "depot";
                   $client = $this->clientRepository->findOneBy(['id'=>$transaction->getClientEnvoi()->getId()]);
-                  $data[$key]['nom'] = $client->getPrenom() ." ".$client->getNom();
+                  $data[$t]['nom'] = $client->getPrenom() ." ".$client->getNom();
                }
+               $t++;
+               
             }
             foreach($transactionsR as $key => $trans){
-                $data[$key]['ttc'] = $trans->getTotalCommission();
-                $data[$key]['montant'] = $trans->getMontant();
+                $data[$t]['montant'] = $trans->getMontant();
                if($trans->getDateRetrait() !=null){
-                  $data[$key]['date'] = $trans->getDateRetrait()->format('Y-m-d');
-                  $data[$key]['commission'] = $trans->getCommissionRetrait();
-                  $data[$key]['type'] = "retrait";
-                  $client = $this->clientRepository->findOneBy(['id'=>$trans->getClientEnvoi()->getId()]);
-                  $data[$key]['nom'] = $client->getPrenom() ." ".$client->getNom();
+                   $data[$t]['commission'] = $transaction->getCommissionRetrait();
+                  $data[$t]['date'] = $trans->getDateRetrait()->format('Y-m-d');
+                  $data[$t]['type'] = "retrait";
                }
             }
         }

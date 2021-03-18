@@ -19,11 +19,24 @@ export class TransactionPage implements OnInit {
   sortDirectionfrais = 0;
   sortDirectiontype = 0;
   sortKey = null;
+  useragence: boolean = false;
+  adminsys: boolean= false;
+  avatar: string;
   constructor(private authService: AuthenticationService, private http: HttpClient, private alertCtrl: AlertController) {
     this.loadData();
+    this.authService.getMyRole().then((role) => {
+
+      if(role === 'ROLE_AdminSysteme'){
+        this.adminsys = true;
+      }else if(role === "ROLE_UserAgence" ){
+        this.useragence = true;
+      }
+    });
   }
 
   ngOnInit() {
+
+
   }
 
 
@@ -32,25 +45,24 @@ export class TransactionPage implements OnInit {
       cssClass: 'my-custom-class',
       subHeader: `Transaction  N° ${row.id}`,
       message:  ` <ion-card>
-      <ion-card-content> 
+      <ion-card-content>
       <strong>${row.nom} </strong>  <br>
           <strong>Type : </strong> ${row.type} <br>
-        <strong>Montant : </strog>${row.montant} <br> 
-        <strong>Frais : </strog>${row.ttc} <br> 
-        <strong>Date : </strong>${row.date} <br> 
+        <strong>Montant : </strog>${row.montant} <br>
+        <strong>Frais : </strog>${row.ttc} <br>
+        <strong>Date : </strong>${row.date} <br>
       </ion-card-content>
     </ion-card>`,
       buttons: ['OK']
     });
 
     await alert.present();
-    
+
   }
 
   loadData(){
     this.authService.MesTransactions().subscribe(
-      res => {
-        console.log(res);
+      (res) => {
         this.data = res.data;
         this.sort();
       });

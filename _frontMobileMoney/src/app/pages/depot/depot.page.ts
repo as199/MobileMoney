@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import { AlertOptions } from '@capacitor/core';
 import { AlertController, ToastController, LoadingController } from '@ionic/angular';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import {Client, Transaction} from '../../../modeles/Transaction';
@@ -16,6 +15,8 @@ export class DepotPage implements OnInit {
   credentials: FormGroup;
   frais: any;
   montantTotal: any;
+  montantSend: any;
+  avatar: string;
   constructor( private fb: FormBuilder,
                private toastrCtl: ToastController,
                public alertCtrl: AlertController,
@@ -28,7 +29,8 @@ export class DepotPage implements OnInit {
 
   ngOnInit() {
     this.credentials = this.fb.group({
-      montant: ['', [Validators.required, Validators.min(1)]],
+      montant: [ [Validators.required, Validators.min(500)]],
+      total: [[Validators.min(500)]],
       clientenvoi:this.fb.group( {
         cni: ['15021585698698', [Validators.required, Validators.minLength(8)]],
         prenom: ['Assane', [Validators.required, Validators.minLength(2)]],
@@ -41,6 +43,11 @@ export class DepotPage implements OnInit {
         nom: ['top', [Validators.required, Validators.minLength(2)]],
         telephone: ['77845213654', [Validators.required, Validators.minLength(9)]],
       }),
+    });
+
+    this.authService.getAvatar().then(res =>{
+      this.avatar ="data:image/jpeg;base64,"+res;
+      //../../../assets/img/logoSa.png
     });
   }
 
@@ -147,23 +154,18 @@ export class DepotPage implements OnInit {
     this.etape = false;
   }
 //#endregion
-  async calculFrais() {
-    const loading = await this.loadingCtrl.create();
-    await loading.present();
-    this.authService.calculator(this.credentials.value).subscribe(
-      async (data) =>{
-        await loading.dismiss();
-        this.frais = data.data;
-        this.montantTotal = data.data + this.credentials.value.montant;
-      },async(error) => {
-        await loading.dismiss();
-        const alert = await this.alertCtrl.create({
-          header: 'Failed',
-          message: 'le montant doit etre superieur à 0',
-          buttons: ['OK']
-        });
-        await alert.present();
-      })
+  async calculFrais(event: KeyboardEvent) {
+     if(this.credentials.value.montant == 0 || this.credentials.value.montant == null){
+       this.frais = '';
+       this.montantTotal = ''
+     }else {
+        this.authService.calculator(this.credentials.value).subscribe(
+         async (data) => {
+           this.frais = data.data;
+           this.montantTotal = data.data + this.credentials.value.montant;
+         }, async (error) => {
+         })
+     }
   }
 
   //#region parti des getters
@@ -195,4 +197,17 @@ export class DepotPage implements OnInit {
 //#endregion
 
 
+  calculTotal(event: KeyboardEvent) {
+    if(this.credentials.value.total == 0 || this.credentials.value.total < 500 || this.credentials.value.total == null){
+      this.frais = '';
+      this.montantSend = '';
+    }else {
+      this.authService.deCalculator(this.credentials.value).subscribe(
+        async (res) => {
+          this.frais = res.data.frais;
+          this.montantSend = res.data.montantSend;
+        }, async (error) => {
+        })
+    }
+  }
 }

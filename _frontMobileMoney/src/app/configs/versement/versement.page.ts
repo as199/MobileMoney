@@ -13,6 +13,7 @@ visible: boolean = true;
   comptes: any;
   credentials: FormGroup;
   depots: any;
+  avatar: string;
   constructor(
     private authService: AuthenticationService,
     private fb: FormBuilder,
@@ -20,7 +21,7 @@ visible: boolean = true;
     private alertCtrl: AlertController,
     private toastCtrl: ToastController
 
-    ) { 
+    ) {
       this.authService.getMyRole().then((role) => {
         if(role === 'ROLE_AdminSysteme'){
             this.visible = true;
@@ -37,7 +38,7 @@ visible: boolean = true;
       await loading.dismiss();
       this.comptes = data["hydra:member"];
       console.log(data);
-      
+
 
     }
   );
@@ -48,11 +49,17 @@ visible: boolean = true;
   next(){
     this.visible =false;
   }
-  
+
   ngOnInit(){
    this.getComptes();
-   this.chargerDepot();
-    
+    this.chargerDepot();
+    this.authService.refresh$.subscribe(
+      ()=> {
+        this.chargerDepot();
+      });
+
+
+
     this.credentials = this.fb.group({
       montant: ['', [Validators.required, Validators.min(1)]],
       comptes: ['', [Validators.required]],
@@ -64,7 +71,7 @@ visible: boolean = true;
       (data) =>{
         this.depots = data.data;
         console.log(data);
-        
+
       }
     )
   }
@@ -81,7 +88,7 @@ visible: boolean = true;
           role: 'cancel',
           cssClass: 'secondary',
           handler: (blah) => {
-          
+
           }
         }, {
           text: 'Confirmer',
@@ -90,7 +97,7 @@ visible: boolean = true;
                 cssClass: 'my-custom-class',
                 message: 'Please wait...',
               });
-            
+
               await loading.present();
             this.authService.Verser(this.credentials.value).subscribe(
               async (data) =>{
@@ -102,7 +109,7 @@ visible: boolean = true;
                   duration: 2000
                 });
                 toast.present();
-                
+
               },
               async (err) =>{
                 await loading.dismiss();
@@ -120,14 +127,14 @@ visible: boolean = true;
     });
 
     await alert.present();
-   
-      
-    
+
+
+
   }
 
   async delete(id){
     console.log(id);
-    
+
     const alert = await this.alertCtrl.create({
       cssClass: 'my-custom-class',
       header: 'Confirmation',
@@ -147,7 +154,7 @@ visible: boolean = true;
             this.authService.deleteDepot(id).subscribe(
               async (data) => {
                 console.log(data);
-                
+
                 await loading.dismiss();
                 this.credentials.reset();
                 const alert = await this.alertCtrl.create({
@@ -158,7 +165,7 @@ visible: boolean = true;
               await alert.present();
             }, async(error) => {
               console.log(error);
-              
+
                await loading.dismiss();
               const alert = await this.alertCtrl.create({
                 header: 'Failed',

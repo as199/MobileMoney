@@ -34,6 +34,9 @@ findTransaction:
 addCalcul:
   path: /api/calculer
   controller: App\Controller\TransactionController::Calculatrice
+deCalcul:
+  path: /api/decalculer
+  controller: App\Controller\TransactionController::DeCalculatrice
 
 addDepot:
   path: /api/depots

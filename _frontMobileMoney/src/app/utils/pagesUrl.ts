@@ -14,13 +14,13 @@ export const pages: any = [
   {
     title: 'Commission',
     tabName: 'commission',
-    url: '/commission',
+    url: '/tabs-admin/commission',
     iconName: 'apps-outline',
   },
   {
     title: 'Calculateur de frais',
     tabName: 'calculator',
-    url: '/calculator',
+    url: '/tabs-admin/calculator',
     iconName: 'calculator-outline',
   }
 ];

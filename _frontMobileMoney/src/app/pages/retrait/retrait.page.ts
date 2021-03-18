@@ -22,6 +22,7 @@ export class RetraitPage implements OnInit {
   dateEnvoi='';
   nomEmetteur ="";
   nomRecepteur="";
+  avatar: string;
   constructor(
     private authService: AuthenticationService,
     private fb: FormBuilder,
@@ -37,6 +38,8 @@ export class RetraitPage implements OnInit {
       cni: ['', [Validators.required, Validators.minLength(5)]],
       type: ['retrait', [Validators.required, Validators.minLength(5)]]
     });
+
+
   }
   previous(){
   this.parti1 = 1;

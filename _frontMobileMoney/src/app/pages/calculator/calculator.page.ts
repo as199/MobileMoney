@@ -10,6 +10,7 @@ import {AlertController, LoadingController} from '@ionic/angular';
 })
 export class CalculatorPage implements OnInit {
   credentials: FormGroup;
+  avatar: string;
   constructor(private fb: FormBuilder,
               private alertCtrl: AlertController,
               private loadingCtrl: LoadingController,
@@ -18,6 +19,8 @@ export class CalculatorPage implements OnInit {
   ngOnInit() {
     this.credentials = this.fb.group({
       montant: ['', [Validators.required, Validators.min(1)]]});
+
+
   }
 
   async calculer() {

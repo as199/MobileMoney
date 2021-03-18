@@ -11,6 +11,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 })
 export class LoginPage implements OnInit {
   credentials: FormGroup;
+  passwordToggleIcon= "eye";
+  showPassword = false;
   constructor(
     private router: Router,
     private fb: FormBuilder,
@@ -20,8 +22,10 @@ export class LoginPage implements OnInit {
   ) {}
 
   ngOnInit() {
+    // useragence : 763231255
+    // admin system : 7741252857
     this.credentials = this.fb.group({
-      username: ['7741252857', [Validators.required, Validators.minLength(9)]],
+      username: ['763231255', [Validators.required, Validators.minLength(9)]],
       password: ['pass1234', [Validators.required, Validators.minLength(6)]],
     });
   }
@@ -58,4 +62,14 @@ export class LoginPage implements OnInit {
     return this.credentials.get('password');
   }
 
+
+
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
+    if (this.passwordToggleIcon =="eye"){
+      this.passwordToggleIcon = "eye-off";
+    }else{
+      this.passwordToggleIcon = "eye";
+    }
+  }
 }

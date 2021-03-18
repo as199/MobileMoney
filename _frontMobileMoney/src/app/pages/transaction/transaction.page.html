@@ -20,8 +20,13 @@
   <ion-grid >
     <ion-row class="header-row">
       <ion-col size="3" (click)="sortBy('date')">Date</ion-col>
-      <ion-col size="5"  tappable (click)="sortBy('user')">
+      <ion-col size="5"  tappable (click)="sortBy('user')" *ngIf="adminsys">
         Utilisateur
+        <ion-icon  name="arrow-down" *ngIf="sortDirectionuser == 1"></ion-icon>
+        <ion-icon  name="arrow-up" *ngIf="sortDirectionuser == 2"></ion-icon>
+      </ion-col>
+      <ion-col size="5"  tappable (click)="sortBy('user')" *ngIf="useragence">
+        Type
         <ion-icon  name="arrow-down" *ngIf="sortDirectionuser == 1"></ion-icon>
         <ion-icon  name="arrow-up" *ngIf="sortDirectionuser == 2"></ion-icon>
       </ion-col>
@@ -29,21 +34,28 @@
         <ion-icon  name="arrow-down" *ngIf="sortDirectionmontant == 1"></ion-icon>
         <ion-icon  name="arrow-up" *ngIf="sortDirectionmontant == 2"></ion-icon>
       </ion-col>
-<!--      <ion-col size="2" class="ion-hide-lg-down" >Phone</ion-col>-->
     </ion-row>
 
-    <ion-row *ngFor="let row of data; " tappable (click)="infos(row)">
-      <ion-col size="4" >{{row?.date}}</ion-col>
-      <ion-col size="4"  >
-        {{row?.nom}}
-      </ion-col>
-      <ion-col size="4" >{{row?.montant}}</ion-col>
-      <!-- <ion-col size="2" class="ion-hide-lg-down" >Phone</ion-col>-->
-    </ion-row>
+    <section *ngIf="adminsys">
+      <ion-row *ngFor="let row of data; " tappable (click)="infos(row)">
+        <ion-col size="4">{{row?.date}}</ion-col>
+        <ion-col size="4">
+          {{row?.nom}}
+        </ion-col>
+        <ion-col size="4">{{row?.montant}}</ion-col>
+      </ion-row>
+    </section>
+    <section *ngIf="useragence">
+      <ion-row *ngFor="let row of data;">
+        <ion-col size="4">{{row?.date}}</ion-col>
+        <ion-col size="4">
+          {{row?.type}}
+        </ion-col>
+        <ion-col size="4">{{row?.montant}}</ion-col>
+      </ion-row>
+    </section>
 
   </ion-grid>
 </ion-content>
 
 
-<p></p>
-<br>

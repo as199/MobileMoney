@@ -10,6 +10,7 @@ import {AuthenticationService} from '../../services/authentication.service';
 })
 export class AnnulerDepotPage implements OnInit {
   credentials: FormGroup;
+  avatar: string;
 
   constructor( private fb: FormBuilder,
                private alertCtrl: AlertController,
@@ -19,7 +20,12 @@ export class AnnulerDepotPage implements OnInit {
   ngOnInit() {
     this.credentials = this.fb.group({
       numero: ['',Validators.required]
-    })
+    });
+
+    this.authService.getAvatar().then(res =>{
+      this.avatar ="data:image/jpeg;base64,"+res;
+      //../../../assets/img/logoSa.png
+    });
   }
 
   async annuler() {

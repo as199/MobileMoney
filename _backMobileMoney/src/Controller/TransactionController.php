@@ -239,6 +239,19 @@ class TransactionController extends AbstractController
 
     }
 
+    public function DeCalculatrice(Request $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(),true);
+        if($data['total'] > 0){
+            $result = $this->calculFraisService->DeCalcFrais($data['total']);
+            return $this->json(['message' => 'le montant', 'data'=>$result]);
+        }else{
+            return $this->json(['message' => 'le total doit etre superieur à 0 '],500);
+
+        }
+
+    }
+
     public function GetSolde(): JsonResponse
     {
         $user = $this->tokenStorage->getToken()->getUser();

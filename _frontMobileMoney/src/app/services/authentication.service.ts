@@ -110,6 +110,9 @@ RedirectMe(role: string){
   calculator(montant: number): Observable<any>{
     return this.http.post(`${this.url}/calculer`, montant);
   }
+  deCalculator(montant: number): Observable<any>{
+    return this.http.post(`${this.url}/decalculer`, montant);
+  }
 
   Transaction(data: Transaction): Observable<any>{
     return this.http.post(`${this.url}/transactions`,data).pipe(
@@ -142,7 +145,10 @@ RedirectMe(role: string){
   }
 
   Verser(data: any): Observable<any>{
-    return this.http.post(`${this.url}/depots`,data);
+    return this.http.post(`${this.url}/depots`,data).pipe(
+      tap(() => {
+        this._refresh$.next();
+      }));
     }
 
   DeleteAgence(id: number): Observable<any>{
