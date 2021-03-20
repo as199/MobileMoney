@@ -45,27 +45,24 @@ export class DepotPage implements OnInit {
       }),
     });
 
-    this.authService.getAvatar().then(res =>{
-      this.avatar ="data:image/jpeg;base64,"+res;
-      //../../../assets/img/logoSa.png
-    });
+
   }
 
   async Create() {
-
-  this.myTransaction.montant = this.credentials.value.montant;
-  this.myTransaction.type = "depot";
-  this.myTransaction.status = true;
-  this.myTransaction.clientenvoi = this.credentials.value.clientenvoi;
-  this.myTransaction.clientRetrait = this.credentials.value.clientRetrait;
-  let Infos = {
-    emetteur : this.myTransaction.clientenvoi.prenom +" "+this.myTransaction.clientenvoi.nom,
-    telephone: this.myTransaction.clientenvoi.telephone,
-    cni: this.myTransaction.clientenvoi.cni,
-    montant: this.myTransaction.montant,
-    recepteur: this.myTransaction.clientRetrait.prenom+" "+this.myTransaction.clientRetrait.nom,
-    telephoneRep: this.myTransaction.clientRetrait.telephone
-  }
+  if(this.credentials.value.montant >=500) {
+    this.myTransaction.montant = this.credentials.value.montant;
+    this.myTransaction.type = "depot";
+    this.myTransaction.status = true;
+    this.myTransaction.clientenvoi = this.credentials.value.clientenvoi;
+    this.myTransaction.clientRetrait = this.credentials.value.clientRetrait;
+    let Infos = {
+      emetteur: this.myTransaction.clientenvoi.prenom + " " + this.myTransaction.clientenvoi.nom,
+      telephone: this.myTransaction.clientenvoi.telephone,
+      cni: this.myTransaction.clientenvoi.cni,
+      montant: this.myTransaction.montant,
+      recepteur: this.myTransaction.clientRetrait.prenom + " " + this.myTransaction.clientRetrait.nom,
+      telephoneRep: this.myTransaction.clientRetrait.telephone
+    }
     const alert = await this.alertCtrl.create({
       cssClass: 'my-custom-class',
       header: 'Confirmation',
@@ -89,7 +86,7 @@ export class DepotPage implements OnInit {
           text: 'Ok',
           handler: async () => {
             const loading = await this.loadingCtrl.create();
-             await loading.present();
+            await loading.present();
             this.authService.Transaction(this.myTransaction).subscribe(
               async (data) => {
                 const result = data.data;
@@ -126,25 +123,34 @@ export class DepotPage implements OnInit {
                       }
                     }]
                 });
-              await alert.present();
-            }, async(error) => {
-              console.log(error);
+                await alert.present();
+              }, async (error) => {
+                console.log(error);
 
-              await loading.dismiss();
-              const alert = await this.alertCtrl.create({
-                header: 'Failed',
-                cssClass: "my-custom-class-error",
-                message: error.error,
-                buttons: ['OK']
-              });
-              await alert.present();
-            })
+                await loading.dismiss();
+                const alert = await this.alertCtrl.create({
+                  header: 'Failed',
+                  cssClass: "my-custom-class-error",
+                  message: error.error,
+                  buttons: ['OK']
+                });
+                await alert.present();
+              })
           }
         }
       ]
     });
 
     await alert.present();
+  }else{
+    const alert = await this.alertCtrl.create({
+      header: 'Failed',
+      cssClass: "my-custom-class-error",
+      message: "le montant doit être supérieur ou égal à 500f",
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
   }
  //#region parti navigation
   previous(){

@@ -1,9 +1,81 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>profil</ion-title>
+    <ion-item>
+      <ion-buttons slot="start">
+        <ion-menu-button>
+          <ion-icon name="home-sharp"></ion-icon>
+        </ion-menu-button>
+      </ion-buttons>
+      <ion-label class="centre">
+        Mes infos
+      </ion-label>
+      <ion-avatar class="ion-margin-start">
+        <img class="image" src="../../../assets/img/logoSa.png">
+      </ion-avatar>
+    </ion-item>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-xs="12" size-sm="10" size-md="6" size-lg="4" offset-lg="4" offset-sm="1" offset-md="3">
+        <form [formGroup]="credentials" (ngSubmit)="Update()">
+          <ion-list >
+            <ion-item>
+              <img class="myavatar" tappable [src]="image" alt="" (click)="selectImage()">
+            </ion-item>
+            <ion-item>
+              <ion-label position="floating">Nom complet</ion-label>
+              <ion-input type="text" class="form-control" [value]="infos?.nomComplet"  formControlName="prenom" ></ion-input>
+            </ion-item>
+            <div *ngIf="(prenom.dirty || prenom.touched) && prenom.errors" class="errors">
+              <span *ngIf="prenom.errors?.required">prenom is required</span>
+              <span *ngIf="prenom.errors?.length">prenom is invalid</span>
+            </div>
+            <ion-item>
+              <ion-label position="floating">Téléphone</ion-label>
+              <ion-input type="text" class="form-control" [value]="infos?.telephone" formControlName="telephone"></ion-input>
+            </ion-item>
+            <div *ngIf="(telephone.dirty || telephone.touched) && telephone.errors" class="errors">
+              <span *ngIf="telephone.errors?.required">telephone is required</span>
+              <span *ngIf="telephone.errors?.length">telephone is invalid</span>
+            </div>
+            <ion-item>
+              <ion-label position="floating">Adresse</ion-label>
+              <ion-input type="text" class="form-control" [value]="infos?.Adresse" formControlName="adresse"></ion-input>
+            </ion-item>
+            <div *ngIf="(adresse.dirty || adresse.touched) && adresse.errors" class="errors">
+              <span *ngIf="adresse.errors?.required">adresse is required</span>
+              <span *ngIf="adresse.errors?.length">adresse is invalid</span>
+            </div>
+            <ion-item>
+              <ion-label position="floating">E-mail</ion-label>
+              <ion-input type="email" class="form-control" [value]="infos?.email" formControlName="email" ></ion-input>
+            </ion-item>
+            <div *ngIf="(email.dirty || email.touched) && email.errors" class="errors">
+              <span *ngIf="email.errors?.required">email is required</span>
+              <span *ngIf="email.errors?.length">email is invalid</span>
+            </div>
+            <ion-item>
+              <ion-label position="floating">Password</ion-label>
+              <ion-input type="password" class="form-control" formControlName="password" ></ion-input>
+            </ion-item>
+            <div *ngIf="(password.dirty || password.touched) && password.errors" class="errors">
+              <span *ngIf="password.errors?.required">password is required</span>
+              <span *ngIf="password.errors?.length">password is invalid</span>
+            </div>
+            <ion-item>
+              <ion-label position="floating">Confirm Password</ion-label>
+              <ion-input type="password" class="form-control" formControlName="cpassword" ></ion-input>
+            </ion-item>
+            <div *ngIf="(cpassword.dirty || cpassword.touched ) && cpassword.errors" class="errors">
+              <span *ngIf="cpassword.errors.confirmedValidator">Password and Confirm Password must be match.</span>
+            </div>
+            <ion-button expand="block" color="danger" type="submit">Valider</ion-button>
+          </ion-list>
+        </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

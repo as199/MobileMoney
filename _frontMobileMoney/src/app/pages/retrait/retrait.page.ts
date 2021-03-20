@@ -125,7 +125,7 @@ async retirer(){
             const alert = await this.alertCtrl.create({
               header: 'Failed',
               cssClass: "my-custom-class",
-              message: error.error,
+              message: error.error.message,
               buttons: ['OK']
             });
             await alert.present();

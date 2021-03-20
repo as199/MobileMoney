@@ -12,6 +12,14 @@
 @media print{
   .doNotPrint{display:none !important;}
 }
+.myavatar{
+  width: 150px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  height: 80px;
+  margin: auto;
+}
 .errors{
   color: #fa4b0c;
 }

@@ -8,7 +8,12 @@ api_login_check:
 adding:
   path: /api/adminSys/utilisateurs
   controller: App\Controller\AdminSystemController::Adduser
-
+reset:
+  path: /api/adminSys/utilisateurs/reset
+  controller: App\Controller\AdminSystemController::ResetPassword
+UpdateUser:
+  path: /api/adminSys/utilisateurs/{id}
+  controller: App\Controller\AdminSystemController::UpdateUser
 updateCompte:
   path: /api/adminSys/comptes/{id}
   controller: App\Controller\CompteController::UpdateCompte

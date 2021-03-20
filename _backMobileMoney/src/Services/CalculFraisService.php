@@ -39,7 +39,7 @@ class CalculFraisService
                 $frais = ($value->getFraisEnvoi()*$montant)/100;
             }else{
                 switch($montant){
-                    case $montant>= $value->getMontantMIn() && $montant<$value->getMontantMax():
+                    case $montant> $value->getMontantMIn() && $montant<=$value->getMontantMax():
                         $frais = $value->getFraisEnvoi();
                         break;
                 }
@@ -62,7 +62,7 @@ class CalculFraisService
                 $frais = ($value->getFraisEnvoi()*$montant)/100;
             }else{
                 switch($montant){
-                    case $montant>= $value->getMontantMIn() && $montant<$value->getMontantMax():
+                    case $montant> $value->getMontantMIn() && $montant <=$value->getMontantMax():
                         $frais = $value->getFraisEnvoi();
                         break;
                 }

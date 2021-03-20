@@ -17,6 +17,7 @@ export class AdminSystemPage implements OnInit {
   cacher = true;
   avatar: string;
   logo: any;
+  myid: any;
   constructor(private router: Router ,private authService: AuthenticationService,private alertController: AlertController) {
     this.pages = PagesADMINSYS;
     this.logo = "../../../assets/img/logoSa.png";
@@ -37,9 +38,9 @@ export class AdminSystemPage implements OnInit {
           this.adminSystem = true;
         }
       });
-
-    this.authService.getAvatar().then(res =>{
-      this.avatar ="data:image/jpeg;base64,"+res;
+    const id = +this.authService.getMyid();
+    this.authService.GetOneUserById(id).subscribe(res =>{
+      this.avatar ="data:image/jpeg;base64,"+res['avatar'];
       //../../../assets/img/logoSa.png
     });
 

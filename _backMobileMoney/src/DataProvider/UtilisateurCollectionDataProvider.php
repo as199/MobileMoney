@@ -13,15 +13,22 @@ use App\Repository\AgenceRepository;
 use App\Repository\CompteRepository;
 use App\Repository\UtilisateurRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class UtilisateurCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {
     private  $utilisateurRepository;
     private  $agenceRepository;
-    public function __construct(UtilisateurRepository $utilisateurRepository, AgenceRepository $agenceRepository)
+    /**
+     * @var TokenStorageInterface
+     */
+    private TokenStorageInterface $tokenStorage;
+
+    public function __construct(UtilisateurRepository $utilisateurRepository, TokenStorageInterface $tokenStorage, AgenceRepository $agenceRepository)
     {
         $this->utilisateurRepository = $utilisateurRepository;
         $this->agenceRepository = $agenceRepository;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
@@ -46,7 +53,8 @@ class UtilisateurCollectionDataProvider implements ContextAwareCollectionDataPro
             }
 
             return new JsonResponse(['data'=>$data]);
-        }else{
+        }
+        else{
             $users = $this->utilisateurRepository->findAll();
             $data = array();
             $i = 0;

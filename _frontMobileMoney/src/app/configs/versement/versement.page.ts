@@ -14,6 +14,7 @@ visible: boolean = true;
   credentials: FormGroup;
   depots: any;
   avatar: string;
+  lastid: any;
   constructor(
     private authService: AuthenticationService,
     private fb: FormBuilder,
@@ -70,7 +71,8 @@ visible: boolean = true;
     this.authService.GetDepot().subscribe(
       (data) =>{
         this.depots = data.data;
-        console.log(data);
+        this.lastid = this.depots[0]['numero']
+        console.log(this.depots);
 
       }
     )

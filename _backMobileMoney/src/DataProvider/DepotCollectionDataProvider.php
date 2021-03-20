@@ -52,9 +52,9 @@ class DepotCollectionDataProvider implements ContextAwareCollectionDataProviderI
         $userId = $this->tokenStorage->getToken()->getUser()->getId();
         $role = $this->tokenStorage->getToken()->getUser()->getRoles()[0];
         if($role === "ROLE_AdminSysteme"){
-            $depots = $this->depotRepository->findAll();
+            $depots = $this->depotRepository->findBy([], ['id'=>'DESC']);
         }else{
-            $depots = $this->depotRepository->findBy(['utilisateur'=>$userId]);
+            $depots = $this->depotRepository->findBy(['utilisateur'=>$userId],['id'=>'DESC']);
         }
         foreach($depots as $key => $depot){
             $data[$key]['date'] = $depot->getCreatedAt()->format('Y-m-d à H:i:s');

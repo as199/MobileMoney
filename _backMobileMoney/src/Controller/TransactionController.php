@@ -209,7 +209,7 @@ class TransactionController extends AbstractController
                         $compte->setSolde($compte->getSolde() + $transaction->getMontant());
                         $this->manager->persist($transaction);
                         $this->manager->flush();
-                        return new JsonResponse(" transaction annulle  avec succée", 200, [], true);
+                        return new JsonResponse(['message' =>" transaction annulle  avec succée"], 200, );
 
                     } else {
                         return $this->json(['message' => "Impossible d'annuler le depot car celle ci a deja ete annuler"], 400);
@@ -233,7 +233,7 @@ class TransactionController extends AbstractController
          $montant = $this->calculFraisService->CalcFrais($data['montant']);
             return $this->json(['message' => 'le montant', 'data'=>$montant]);
         }else{
-            return $this->json(['message' => 'le montant doit etre superieur à 0 '],500);
+            return $this->json(['message' => 'le montant doit etre superieur à 0 '],400);
 
         }
 

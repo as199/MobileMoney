@@ -97,7 +97,48 @@ class TransactionCollectionDataProvider implements ContextAwareCollectionDataPro
                 $t++;
             }
            
-        }else{
+        }elseif($this->tokenStorage->getToken()->getUser()->getRoles()[0] === "ROLE_AdminAgence"){
+
+            $compteid =  $this->tokenStorage->getToken()->getUser()->getAgence()->getCompte()->getId();
+            $transactions =  $this->transactionRepository->findBy(['compte'=>$compteid]);
+
+                $i =0 ;
+                foreach($transactions as $key => $transaction){
+
+                    if($transaction->getDateEnvoi() !=null){
+                        $data[$i]['ttc'] = $transaction->getTotalCommission();
+                        $data[$i]['montant'] = $transaction->getMontant();
+                        $data[$i]['id'] = $transaction->getId();
+                        $data[$i]['date'] = $transaction->getDateEnvoi()->format('Y-m-d ');
+                        $data[$i]['commission'] = $transaction->getCommissionDepot();
+                        $data[$i]['type'] = "depot";
+                        $client = $this->utilisateurRepository->findOneBy(['id'=>$transaction->getUserEnvoi()->getId()]);
+                        $data[$i]['nom'] = $client->getNomComplet();
+                    }
+
+                    $i++;
+                    $t++;
+                }
+                foreach($transactions as $key => $transaction){
+
+                    if($transaction->getDateRetrait() !=null){
+                        $data[$i]['ttc'] = $transaction->getTotalCommission();
+                        $data[$i]['montant'] = $transaction->getMontant();
+                        $data[$i]['id'] = $transaction->getId();
+                        // dd($transaction);
+                        $data[$i]['date'] = $transaction->getDateRetrait()->format('Y-m-d');
+                        $data[$i]['commission'] = $transaction->getCommissionRetrait();
+                        $data[$i]['type'] = "retrait";
+                        $client = $this->utilisateurRepository->findOneBy(['id'=>$transaction->getUserRetrait()->getId()]);
+                        $data[$i]['nom'] = $client->getNomComplet();
+
+                    }
+                    $i++;
+                    $t++;
+                }
+
+            }
+        else{
             $user = $this->tokenStorage->getToken()->getUser()->getId();
             $transactions = $this->transactionRepository->findBy(['userEnvoi'=>$user]);
 

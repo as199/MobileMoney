@@ -10,14 +10,10 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 })
 export class TransactionPage implements OnInit {
   page = 0;
-  resultsCount = 10;
-  totalPages = 10;
   data = [];
   bulkEdit = false;
   sortDirectionuser = 0;
   sortDirectionmontant = 0;
-  sortDirectionfrais = 0;
-  sortDirectiontype = 0;
   sortKey = null;
   useragence: boolean = false;
   adminsys: boolean= false;
@@ -26,7 +22,7 @@ export class TransactionPage implements OnInit {
     this.loadData();
     this.authService.getMyRole().then((role) => {
 
-      if(role === 'ROLE_AdminSysteme'){
+      if(role === 'ROLE_AdminSysteme' || role === 'ROLE_AdminAgence'){
         this.adminsys = true;
       }else if(role === "ROLE_UserAgence" ){
         this.useragence = true;
@@ -63,32 +59,17 @@ export class TransactionPage implements OnInit {
   loadData(){
     this.authService.MesTransactions().subscribe(
       (res) => {
+        console.log(res);
         this.data = res.data;
-        this.sort();
+      }, error => {
+        console.log(error);
       });
   }
 
   sortBy(key) {
-    this.sortKey = key;
-    if(key === "user"){
       this.sortDirectionuser ++;
-      this.sort();
-    }
+
   }
 
-  sort() {
-    if(this.sortDirectionuser == 1){
-      this.data = this.data.sort((a, b)=>{
-        console.log('a: ', a);
-        const valA = a[this.sortKey];
-        const valB = b[this.sortKey];
-        return valA.localeCompare(valB);
-      });
-    }else if(this.sortDirectionuser == 2){
 
-    }else{
-      this.sortDirectionuser = 0;
-      this.sortKey = null;
-    }
-  }
 }

@@ -7,21 +7,17 @@
         </ion-menu-button>
       </ion-buttons>
       <ion-avatar class="centrer">
-        <img [src]="logo">
+        <img [src]="logo" >
       </ion-avatar>
       <ion-avatar slot="end">
-        <img [src]="avatar">
-        <ion-select placeholder="Select One" interface="popover">
-          <ion-select-option value="f">Female</ion-select-option>
-          <ion-select-option value="m">Male</ion-select-option>
-        </ion-select>
+        <img [src]="avatar" (click)="onItemClick('/profil')" routerDirection="root">
       </ion-avatar>
     </ion-item>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-grid fixed>
+  <ion-grid >
     <ion-row>
       <ion-col size="12" size-xs="12" size-sm="10" size-md="6" size-lg="6" offset-lg="3" offset-sm="1" offset-md="3">
         <ion-card><ion-card-content>

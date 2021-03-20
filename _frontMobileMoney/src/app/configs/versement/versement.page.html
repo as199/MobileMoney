@@ -53,23 +53,41 @@
   </ion-grid>
   <ion-grid  *ngIf="!visible">
     <ion-row>
-      <ion-col *ngFor="let u of depots" size="12" size-xs="12" size-sm="10" size-md="6" size-lg="6" offset-lg="3" offset-sm="1" offset-md="3">
-         <ion-card>
-          <ion-card-header>
-            <ion-card-subtitle>
-              <ion-icon class="deleted"  tappable (click)="delete(a.value.id)" color="danger" name="trash-outline"></ion-icon>
-            </ion-card-subtitle>
-            <ion-card-title> Depot N° {{u?.numero}}</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <section *ngIf="u?.visible">
-              <strong>Auteur : </strong> {{u?.nom}} <br>
-            </section>
-            <strong>N° Compte : </strong> {{u?.compte}} <br>
-            <strong>Montant : </strong> {{u?.montant}} <br>
-            <strong>Date  : </strong> {{u?.date}} <br>
-          </ion-card-content>
-        </ion-card>
+      <ion-col  size="12" size-xs="12" size-sm="10" size-md="6" size-lg="6" offset-lg="3" offset-sm="1" offset-md="3">
+        <!--         <ion-card>-->
+        <!--          <ion-card-header>-->
+        <!--            <ion-card-subtitle>-->
+        <!--              <ion-icon class="deleted"  tappable (click)="delete(a.value.id)" color="danger" name="trash-outline"></ion-icon>-->
+        <!--            </ion-card-subtitle>-->
+        <!--            <ion-card-title> Depot N° {{u?.numero}}</ion-card-title>-->
+        <!--          </ion-card-header>-->
+        <!--          <ion-card-content>-->
+        <!--            <section *ngIf="u?.visible">-->
+        <!--              <strong>Auteur : </strong> {{u?.nom}} <br>-->
+        <!--            </section>-->
+        <!--            <strong>N° Compte : </strong> {{u?.compte}} <br>-->
+        <!--            <strong>Montant : </strong> {{u?.montant}} <br>-->
+        <!--            <strong>Date  : </strong> {{u?.date}} <br>-->
+        <!--          </ion-card-content>-->
+        <!--        </ion-card>-->
+        <ion-virtual-scroll [items]="depots" approxItemHeight="320px">
+          <ion-card *virtualItem="let u; let itemBounds = bounds;">
+            <ion-card-header>
+              <ion-card-subtitle>
+                <ion-icon class="deleted" *ngIf="lastid == u?.numero "  tappable (click)="delete(u.id)" color="danger" name="trash-outline"></ion-icon>
+              </ion-card-subtitle>
+              <ion-card-title> Depot N° {{u?.numero}}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <section *ngIf="u?.visible">
+                <strong>Auteur : </strong> {{u?.nom}} <br>
+              </section>
+              <strong>N° Compte : </strong> {{u?.compte}} <br>
+              <strong>Montant : </strong> {{u?.montant}} <br>
+              <strong>Date  : </strong> {{u?.date}} <br>
+            </ion-card-content>
+          </ion-card>
+        </ion-virtual-scroll>
       </ion-col>
     </ion-row>
   </ion-grid>

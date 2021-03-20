@@ -22,12 +22,15 @@ export class LoginPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    // useragence : 763231255
+    // diana 774306566   ps: pass1234
+    // useragence : 7741242857
+    //adminAgence: 766540364
+    // caissier: 7741222854
     // admin system : 7741252857
-    this.credentials = this.fb.group({
-      username: ['763231255', [Validators.required, Validators.minLength(9)]],
+  this.credentials = this.fb.group({
+      username: ['766540364', [Validators.required, Validators.minLength(9)]],
       password: ['pass1234', [Validators.required, Validators.minLength(6)]],
-    });
+  });
   }
 
   async login() {
@@ -71,5 +74,9 @@ export class LoginPage implements OnInit {
     }else{
       this.passwordToggleIcon = "eye";
     }
+  }
+
+  onItemClick(url: string) {
+    this.router.navigate([url]);
   }
 }

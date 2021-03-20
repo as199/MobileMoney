@@ -26,7 +26,6 @@ class JwtCreatedSubscriber
         $res = $this->user->findBy(['telephone'=>$data['telephone']]);
         $data['status'] =$res[0]->getStatus();
         $data['id'] =  $res[0]->getId();
-        $data['avatar'] =  $res[0]->getAvatar();
 
         $event->setData($data);
     }

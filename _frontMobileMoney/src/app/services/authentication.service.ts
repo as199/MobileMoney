@@ -23,6 +23,7 @@ decoded: any;
  url = 'http://127.0.0.1:8000/api';
  private _refresh$ = new Subject();
   role: string;
+  idUser: any;
   constructor(private http: HttpClient, private router: Router) {
     this.loadToken();
   }
@@ -60,28 +61,25 @@ decoded: any;
     this.myToken = token;
     let from = jwt_decode(token);
     this.myRole = from['roles'][0];
+    this.idUser = from['id'];
     await Storage.set({key: TOKEN_KEY, value: token});
+    await Storage.set({key: 'id', value: from['id']});
     await Storage.set({key: 'role', value: from['roles']});
     await Storage.set({key: 'telephone', value: from['telephone']});
-    await Storage.set({key: 'avatar', value: from['avatar']});
 
  }
  getToken(){
   return this.myToken;
+ }
+ getMyid(){
+    return this.idUser;
  }
 
 getRole(){
   return this.myRole;
 }
 
-async getAvatar() {
-  const avatar = await Storage.get({key: 'avatar'});
-  if (avatar && avatar.value) {
-    this.role = avatar.value;
 
-    return this.role;
-  }
-}
 async getMyRole(){
   const token = await Storage.get({key: 'role'});
   if (token && token.value){
@@ -104,6 +102,7 @@ RedirectMe(role: string){
     Storage.remove({key: 'role' });
     Storage.remove({key: 'telephone' });
     Storage.remove({key: 'intro-seen' });
+    Storage.remove({key: 'id' });
     return Storage.remove({key: TOKEN_KEY});
   }
 
@@ -119,6 +118,14 @@ RedirectMe(role: string){
       tap(() => {
         this._refresh$.next();
       }));
+  }
+  async getId() {
+    const res = await Storage.get({key: 'id'});
+    if (res && res.value) {
+      this.role = res.value;
+
+      return this.role;
+    }
   }
 
   annulerTransaction(numero:any): Observable<any>{
@@ -150,7 +157,9 @@ RedirectMe(role: string){
         this._refresh$.next();
       }));
     }
-
+  GetOneUserById(id: number){
+    return this.http.get(`${this.url}/adminSys/utilisateurs/${id}`);
+  }
   DeleteAgence(id: number): Observable<any>{
     return this.http.delete(`${this.url}/agences/${id}`).pipe(
       tap(() => {
@@ -170,6 +179,9 @@ RedirectMe(role: string){
   AddUser(user: any): Observable<any>{
     return this.http.post(`${this.url}/adminSys/utilisateurs`,user);
   }
+  ResetUser(user: any): Observable<any>{
+    return this.http.post(`${this.url}/adminSys/utilisateurs/reset`,user);
+  }
   deleteUser(id: number): Observable<any>{
     return this.http.delete(`${this.url}/adminSys/utilisateurs/${id}`).pipe(
       tap(() => {
@@ -183,6 +195,10 @@ RedirectMe(role: string){
   GetAllUsers(): Observable<any>{
     return this.http.get<any>(`${this.url}/adminSys/utilisateurs`);
   }
+  UpdateUser(data: any, id: number): Observable<any>{
+    return this.http.put<any>(`${this.url}/adminSys/utilisateurs/${id}`,data);
+  }
+
 
   GetDepot(): Observable<any>{
     return this.http.get<any>(`${this.url}/depots`);

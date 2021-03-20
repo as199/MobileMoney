@@ -29,10 +29,10 @@
         <ion-icon  name="arrow-up" *ngIf="sortDirectionmontant == 2"></ion-icon>
       </ion-col>
     </ion-row>
-     <ion-row *ngFor="let row of data; " tappable>
-      <ion-col size="5" >{{row?.date}}</ion-col>
-      <ion-col size="3"  > {{row?.type}}</ion-col>
-      <ion-col size="4" >{{row?.commission}}</ion-col>
+     <ion-row *ngFor="let row of data | keyvalue; " tappable>
+      <ion-col size="5" >{{row.value?.date}}</ion-col>
+      <ion-col size="3"  > {{row.value?.type}}</ion-col>
+      <ion-col size="4" >{{row.value?.commission}}</ion-col>
     </ion-row>
   </ion-grid>
 </ion-content>

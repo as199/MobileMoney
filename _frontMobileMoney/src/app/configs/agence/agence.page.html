@@ -7,7 +7,7 @@
     </ion-buttons>
     <ion-title>agence</ion-title>
   </ion-toolbar>
-  <ion-header>
+  </ion-header>
 <ion-content>
   <ion-grid >
     <ion-row>
@@ -49,20 +49,35 @@
   </ion-grid>
   <ion-grid  *ngIf="!visible">
     <ion-row>
-      <ion-col *ngFor="let a of agence | keyvalue"  size="12" size-xs="12" size-sm="10" size-md="6" size-lg="6" offset-lg="3" offset-sm="1" offset-md="3">
-         <ion-card >
-          <ion-card-header>
-            <ion-card-subtitle>
-              <ion-icon class="deleted"  tappable (click)="delete(a.value.id)" color="danger" name="trash-outline"></ion-icon>
-            </ion-card-subtitle>
-            <ion-card-title> {{a.value.nom}}</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <strong>Numero compte : </strong> {{a.value.numeroCompte}} <br>
-            <strong>Adresse : </strong> {{a.value.adresse}} <br>
-            <strong>Capital : </strong> {{a.value.solde}} <br>
-          </ion-card-content>
-        </ion-card>
+      <ion-col  size="12" size-xs="12" size-sm="10" size-md="6" size-lg="6" offset-lg="3" offset-sm="1" offset-md="3">
+        <!--         <ion-card >-->
+        <!--          <ion-card-header>-->
+        <!--            <ion-card-subtitle>-->
+        <!--              <ion-icon class="deleted"  tappable (click)="delete(a.value.id)" color="danger" name="trash-outline"></ion-icon>-->
+        <!--            </ion-card-subtitle>-->
+        <!--            <ion-card-title> {{a.value.nom}}</ion-card-title>-->
+        <!--          </ion-card-header>-->
+        <!--          <ion-card-content>-->
+        <!--            <strong>Numero compte : </strong> {{a.value.numeroCompte}} <br>-->
+        <!--            <strong>Adresse : </strong> {{a.value.adresse}} <br>-->
+        <!--            <strong>Capital : </strong> {{a.value.solde}} <br>-->
+        <!--          </ion-card-content>-->
+        <!--        </ion-card>-->
+        <ion-virtual-scroll [items]="agence | keyvalue" approxItemHeight="320px">
+          <ion-card *virtualItem="let a; let itemBounds = bounds;">
+            <ion-card-header>
+              <ion-card-subtitle>
+                <ion-icon class="deleted"  tappable (click)="delete(a.value.id)" color="danger" name="trash-outline"></ion-icon>
+              </ion-card-subtitle>
+              <ion-card-title> {{a.value.nom}}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <strong>Numero compte : </strong> {{a.value.numeroCompte}} <br>
+              <strong>Adresse : </strong> {{a.value.adresse}} <br>
+              <strong>Capital : </strong> {{a.value.solde}} <br>
+            </ion-card-content>
+          </ion-card>
+        </ion-virtual-scroll>
       </ion-col>
     </ion-row>
   </ion-grid>

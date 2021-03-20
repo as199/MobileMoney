@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Utilisateur;
 use App\Repository\ProfilRepository;
+use App\Repository\UtilisateurRepository;
+use App\Services\GestionImage;
 use App\Services\InscriptionService;
 use App\Services\Validator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,9 +38,17 @@ class AdminSystemController extends AbstractController
      * @var Validator
      */
     private Validator $validator;
+    /**
+     * @var UtilisateurRepository
+     */
+    private UtilisateurRepository $repository;
+    /**
+     * @var UtilisateurRepository
+     */
+    private UtilisateurRepository $utilisateurRepository;
 
     public function __construct(ProfilRepository $profilRepository, EntityManagerInterface $manager
-        , SerializerInterface $serializer,
+        , SerializerInterface $serializer, UtilisateurRepository $utilisateurRepository,
                                 UserPasswordEncoderInterface $encode, Validator $validator)
     {
         $this->manager = $manager;
@@ -45,6 +56,7 @@ class AdminSystemController extends AbstractController
         $this->encode =$encode;
         $this->profilRepository =$profilRepository;
         $this->validator =$validator;
+        $this->utilisateurRepository =$utilisateurRepository;
     }
 
     /**
@@ -63,5 +75,68 @@ class AdminSystemController extends AbstractController
         $this->manager->flush();
         return new JsonResponse(["data"=>$utilisateur], 200);
 
+    }
+
+
+    public function UpdateUser(GestionImage $service,Request $request, $id): JsonResponse
+    {
+
+        // $profil = $request->get('profil'); //pour dynamiser
+
+        $userUpdate = $service->GestionImage($request,'avatar');
+        $utilisateur = $this->utilisateurRepository->findOneBy(['id'=>$id]);
+        //dd($utilisateur);
+        foreach ($userUpdate as $key=> $valeur){
+            $setter = 'set'. ucfirst(strtolower($key));
+            //dd($setter);
+            if(method_exists(Utilisateur::class, $setter)){
+                if($setter=='setProfil'){
+
+                }
+                else{
+                    $utilisateur->$setter($valeur);
+                }
+
+            }
+            if($setter  =='setPrenom'){
+                $nom = $userUpdate["prenom"].' '.$userUpdate["nom"];
+                $utilisateur->setNomComplet($nom);
+            }
+            if ($setter=='setPassword'){
+
+                if(isset($userUpdate['password'])){
+                    $utilisateur->setPassword($this->encode->encodePassword($utilisateur,$userUpdate['password']));
+                }
+            }
+
+
+        }
+
+        $this->manager->persist($utilisateur);
+        $this->manager->flush();
+        return new JsonResponse(["message"=>"success"],200);
+
+
+    }
+
+    public function ResetPassword(Request $request): JsonResponse
+    {
+
+        $data = json_decode($request->getContent(),true);
+       $user = $this->utilisateurRepository->findOneBy(['telephone'=>$data['telephone']]);
+       if(isset($user) && $user->getEmail() === $data['email']){
+           $newPassword = $this->genererChaineAleatoire();
+           $user->setPassword($this->encode->encodePassword($user,$newPassword));
+           $this->manager->flush();
+       }
+        return new JsonResponse(["data"=>$newPassword],200);
+
+
+    }
+
+    private  function genererChaineAleatoire($longueur = 8)
+    {
+        $x='0123456789@&!abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        return substr(str_shuffle(str_repeat($x, ceil($longueur/strlen($x)) )),1,$longueur);
     }
 }

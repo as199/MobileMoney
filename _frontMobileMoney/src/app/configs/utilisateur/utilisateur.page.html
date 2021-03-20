@@ -117,22 +117,39 @@
   </ion-grid>
   <ion-grid  *ngIf="!visible">
     <ion-row>
-      <ion-col *ngFor="let u of users" size="12" size-xs="12" size-sm="10" size-md="6" size-lg="6" offset-lg="3" offset-sm="1" offset-md="3">
-         <ion-card>
-          <ion-card-header>
-            <ion-card-subtitle>
-              <ion-icon class="deleted"  tappable (click)="delete(u.id)" color="danger" name="trash-outline"></ion-icon>
-            </ion-card-subtitle>
-            <ion-card-title>{{u?.nom}}</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <section *ngIf="u?.visible">
-              <strong>Agence : </strong> {{u?.agence}} <br>
-            </section>
-            <strong>Type : </strong> {{u?.type}} <br>
-            <strong>Téléphone : </strong> {{u?.telephone}} <br>
-          </ion-card-content>
-        </ion-card>
+      <ion-col  size="12" size-xs="12" size-sm="10" size-md="6" size-lg="6" offset-lg="3" offset-sm="1" offset-md="3">
+        <!--         <ion-card>-->
+        <!--          <ion-card-header>-->
+        <!--            <ion-card-subtitle>-->
+        <!--              <ion-icon class="deleted"  tappable (click)="delete(u.id)" color="danger" name="trash-outline"></ion-icon>-->
+        <!--            </ion-card-subtitle>-->
+        <!--            <ion-card-title>{{u?.nom}}</ion-card-title>-->
+        <!--          </ion-card-header>-->
+        <!--          <ion-card-content>-->
+        <!--            <section *ngIf="u?.visible">-->
+        <!--              <strong>Agence : </strong> {{u?.agence}} <br>-->
+        <!--            </section>-->
+        <!--            <strong>Type : </strong> {{u?.type}} <br>-->
+        <!--            <strong>Téléphone : </strong> {{u?.telephone}} <br>-->
+        <!--          </ion-card-content>-->
+        <!--        </ion-card>-->
+        <ion-virtual-scroll [items]="users" approxItemHeight="320px">
+          <ion-card *virtualItem="let u; let itemBounds = bounds;">
+            <ion-card-header>
+              <ion-card-subtitle>
+                <ion-icon class="deleted"  tappable (click)="delete(u.id)" color="danger" name="trash-outline"></ion-icon>
+              </ion-card-subtitle>
+              <ion-card-title>{{u?.nom}}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <section *ngIf="u?.visible">
+                <strong>Agence : </strong> {{u?.agence}} <br>
+              </section>
+              <strong>Type : </strong> {{u?.type}} <br>
+              <strong>Téléphone : </strong> {{u?.telephone}} <br>
+            </ion-card-content>
+          </ion-card>
+        </ion-virtual-scroll>
       </ion-col>
     </ion-row>
   </ion-grid>

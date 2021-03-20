@@ -26,11 +26,12 @@
             </ion-item>
             <div *ngIf="(password.dirty || password.touched) && password.errors" class="errors">
               <span *ngIf="password.errors?.required">Password is required</span>
-              <span *ngIf="email.errors?.minlength">Password need to be 6 characters</span>
+              <span *ngIf="password.errors?.minlength">Password need to be 6 characters</span>
             </div>
-            <ion-item>
-              <ion-label color="primary" >Mot de passe oublié?</ion-label></ion-item>
-          </div>
+            <ion-item lines="none">
+              <ion-button fill="clear" (click)="onItemClick('/reset-password')" slot="end">Mot de passe oublié ?</ion-button>
+            </ion-item>
+            </div>
 
 
         <ion-button type="submit" [disabled]="!credentials.valid" expand="block">connexion</ion-button>

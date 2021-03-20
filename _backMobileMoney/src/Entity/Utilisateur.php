@@ -17,9 +17,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type_id", type="integer")
  * @ORM\DiscriminatorMap({1 ="AdminSysteme",2="Caissier",3="AdminAgence",4="UserAgence", 5="Utilisateur"})
- * @ApiResource (attributes={"route_prefix"="/adminSys","security"="is_granted('ROLE_AdminSysteme')"},
+ * @ApiResource (attributes={"route_prefix"="/adminSys","security"="is_granted('ROLE_AdminSysteme') or is_granted('ROLE_AdminAgence') or is_granted('ROLE_Caissier') or is_granted('ROLE_UserAgence')"},
  *     normalizationContext={"groups"={"user:read"}},
- *    itemOperations={"GET","PUT","DELETE"},
+ *    itemOperations={"GET","UpdateUser":{"method":"PUT", "route_name":"UpdateUser","path":"/utilisateurs/{id}"},"DELETE"},
  *    collectionOperations={
  *        "addUser":{
  *              "route_name"="adding",
@@ -27,7 +27,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  *              "path":"/utilisateurs",
  *              "access_control"="(is_granted('ROLE_AdminSysteme') )",
  *              "access_control_message"="Vous n'avez pas access à cette Ressource",
- *          },"GET","getusers":{"method":"GET","path":"/utilisateurs/users",}
+ *          },"GET","getusers":{"method":"GET","path":"/utilisateurs/users"},
+ *
+ *
  *     }
  * )
  * * @UniqueEntity(fields="email", message="ce e-mail {{ value }} est féjà utilisé !")
@@ -337,7 +339,7 @@ class Utilisateur implements UserInterface
     }
 
     /**
-     * @return Collection|Transaction[]
+     * @return Collection
      */
     public function getTransactions(): Collection
     {

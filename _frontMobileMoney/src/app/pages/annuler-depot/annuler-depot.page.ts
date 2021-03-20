@@ -22,10 +22,6 @@ export class AnnulerDepotPage implements OnInit {
       numero: ['',Validators.required]
     });
 
-    this.authService.getAvatar().then(res =>{
-      this.avatar ="data:image/jpeg;base64,"+res;
-      //../../../assets/img/logoSa.png
-    });
   }
 
   async annuler() {
@@ -57,6 +53,7 @@ export class AnnulerDepotPage implements OnInit {
                 });
                 await alert.present();
               }, async (error) => {
+                console.log(error);
                 await loading.dismiss();
                 const alert = await this.alertCtrl.create({
                   header: 'Failed',
