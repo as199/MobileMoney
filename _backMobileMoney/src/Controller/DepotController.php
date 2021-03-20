@@ -121,16 +121,16 @@ class DepotController extends AbstractController
                     $this->manager->remove($depot);
                     $this->manager->flush();
 
-                    return new JsonResponse("Depot annuler avec succee", 200, [], true);
+                    return new JsonResponse(["message" => "Depot annuler avec succee"], 200);
 
                 }else{
-                    return new JsonResponse(" annulation du depot imposible", 200, [], true);
+                    return new JsonResponse(["message"=>" annulation du depot imposible"], 400);
                 }
                 }else{
-                return new JsonResponse("Impossible d'annuler cette depot car il a ete effectuer par quelqu'un d'autre", 500, [], true);
+                return new JsonResponse(["message"=>"Impossible d'annuler cette depot car il a ete effectuer par quelqu'un d'autre"], 500);
             }
         }else{
-            return new JsonResponse(" Impossible d'annuler cette depot car il n'est pas le dernier", 500, [], true);
+            return new JsonResponse(["message"=>" Impossible d'annuler cette depot car il n'est pas le dernier"], 500);
         }
     }
 

@@ -40,7 +40,7 @@ class UtilisateurCollectionDataProvider implements ContextAwareCollectionDataPro
     {
         if($operationName === "getusers"){
             $data = [];
-            $users = $this->utilisateurRepository->findAll();
+            $users = $this->utilisateurRepository->findBy([], ['id'=>'DESC']);
             $i = 0;
             foreach($users as $key => $user ){
 
@@ -55,7 +55,7 @@ class UtilisateurCollectionDataProvider implements ContextAwareCollectionDataPro
             return new JsonResponse(['data'=>$data]);
         }
         else{
-            $users = $this->utilisateurRepository->findAll();
+            $users = $this->utilisateurRepository->findBy([], ['id'=>'DESC']);
             $data = array();
             $i = 0;
             foreach($users as $key => $user ){

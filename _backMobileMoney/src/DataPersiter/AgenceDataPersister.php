@@ -51,9 +51,12 @@ final class AgenceDataPersister implements ContextAwareDataPersisterInterface
     {  $data->setStatus(true);
         $this->manager->persist($data);
 
-        foreach ($data->getUtilisateurs() as $user){
-            $user->setStatus(true);
+        if($users = $data->getUtilisateurs()){
+            foreach ($users as $user){
+                $user->setStatus(true);
+            }
         }
+
         $this->manager->flush();
         return new JsonResponse("Archivage successfully!",200,[],true);
         

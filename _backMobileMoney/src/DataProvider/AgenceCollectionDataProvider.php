@@ -40,7 +40,7 @@ class AgenceCollectionDataProvider implements ContextAwareCollectionDataProvider
 
     public function getCollection(string $resourceClass, string $operationName = null, array $context = []): JSONResponse
     {
-        $agences = $this->agenceRepository->findAll();
+        $agences = $this->agenceRepository->findBy([], ['id'=>'DESC']);
         $data = array();
         foreach ($agences as $key => $agence){
             

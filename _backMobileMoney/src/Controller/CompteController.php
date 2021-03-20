@@ -62,14 +62,14 @@ class CompteController extends AbstractController
             if($infos['solde']> 0){
                 $compte->setSolde($compte->getSolde() +$infos['solde']);
             }else{
-                return new JsonResponse("le montant doit etre superieiur à 0",400,[],true);
+                return new JsonResponse(["message" =>"le montant doit etre superieiur à 0"],400);
             }
 
         }
 
         $this->manager->persist($compte);
         $this->manager->flush();
-        return $this->json(['message' => 'compte crée avec succée ', 'data'=>$compte]);
+        return $this->json(['message' => 'compte crée avec succée ', 'data'=>$compte,200]);
 
 
     }
@@ -89,7 +89,7 @@ class CompteController extends AbstractController
          $data->setAdminSysteme($adminSysteme);
             $this->manager->persist($data);
             $this->manager->flush();
-        return new JsonResponse("Le compte a été creé avec succé",200,[],true);
+        return new JsonResponse(["message" =>"Le compte a été creé avec succé"],200,[],true);
     }
 
 
