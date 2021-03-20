@@ -71,7 +71,8 @@ export class UtilisateurPage implements OnInit {
   }
   chargerAgence(){
     this.authService.GetAgence().subscribe((data) => {
-      this.agences = data.data;
+      this.agences = data;
+      console.log(this.agences);
     });
   }
 

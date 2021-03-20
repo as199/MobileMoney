@@ -23,6 +23,7 @@ export class RetraitPage implements OnInit {
   nomEmetteur ="";
   nomRecepteur="";
   avatar: string;
+  etat = 'beneficiare';
   constructor(
     private authService: AuthenticationService,
     private fb: FormBuilder,
@@ -44,14 +45,10 @@ export class RetraitPage implements OnInit {
   previous(){
   this.parti1 = 1;
   this.parti2 = 0;
-  this.etatColor1 = 'danger';
-  this.etatColor2 = 'white';
   }
   next(){
     this.parti1 = 0;
     this.parti2 = 1;
-    this.etatColor1 = 'white';
-    this.etatColor2 = 'danger';
   }
 
 
@@ -143,5 +140,11 @@ async retirer(){
   }
   get cni() {
     return this.credentials.get('cni');
+  }
+
+  suivant() {
+    this.parti1 = 0;
+    this.parti2 = 1;
+    this.etat = 'emetteur';
   }
 }

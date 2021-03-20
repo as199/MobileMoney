@@ -28,7 +28,7 @@ export class LoginPage implements OnInit {
     // caissier: 7741222854
     // admin system : 7741252857
   this.credentials = this.fb.group({
-      username: ['766540364', [Validators.required, Validators.minLength(9)]],
+      username: ['7741252857', [Validators.required, Validators.minLength(9)]],
       password: ['pass1234', [Validators.required, Validators.minLength(6)]],
   });
   }

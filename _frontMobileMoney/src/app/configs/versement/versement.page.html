@@ -74,7 +74,7 @@
           <ion-card *virtualItem="let u; let itemBounds = bounds;">
             <ion-card-header>
               <ion-card-subtitle>
-                <ion-icon class="deleted" *ngIf="lastid == u?.numero "  tappable (click)="delete(u.id)" color="danger" name="trash-outline"></ion-icon>
+                <ion-icon class="deleted" *ngIf="lastid == u?.numero "  tappable (click)="delete(u?.numero)" color="danger" name="trash-outline"></ion-icon>
               </ion-card-subtitle>
               <ion-card-title> Depot N° {{u?.numero}}</ion-card-title>
             </ion-card-header>

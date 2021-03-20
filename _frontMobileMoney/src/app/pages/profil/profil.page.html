@@ -58,20 +58,27 @@
               <span *ngIf="email.errors?.length">email is invalid</span>
             </div>
             <ion-item>
-              <ion-label position="floating">Password</ion-label>
-              <ion-input type="password" class="form-control" formControlName="password" ></ion-input>
+              <ion-checkbox (click)="Afficher()" color="secondary" slot="start"></ion-checkbox>
+              <ion-label>modifier mon password</ion-label>
             </ion-item>
-            <div *ngIf="(password.dirty || password.touched) && password.errors" class="errors">
-              <span *ngIf="password.errors?.required">password is required</span>
-              <span *ngIf="password.errors?.length">password is invalid</span>
-            </div>
-            <ion-item>
-              <ion-label position="floating">Confirm Password</ion-label>
-              <ion-input type="password" class="form-control" formControlName="cpassword" ></ion-input>
-            </ion-item>
-            <div *ngIf="(cpassword.dirty || cpassword.touched ) && cpassword.errors" class="errors">
-              <span *ngIf="cpassword.errors.confirmedValidator">Password and Confirm Password must be match.</span>
-            </div>
+            <section *ngIf="modifPass">
+              <ion-item>
+                <ion-label position="floating">Password</ion-label>
+                <ion-input type="password" class="form-control" formControlName="password" ></ion-input>
+              </ion-item>
+              <div *ngIf="(password.dirty || password.touched) && password.errors" class="errors">
+                <span *ngIf="password.errors?.required">password is required</span>
+                <span *ngIf="password.errors?.length">password is invalid</span>
+              </div>
+              <ion-item>
+                <ion-label position="floating">Confirm Password</ion-label>
+                <ion-input type="password" class="form-control" formControlName="cpassword" ></ion-input>
+              </ion-item>
+              <div *ngIf="(cpassword.dirty || cpassword.touched ) && cpassword.errors" class="errors">
+                <span *ngIf="cpassword.errors.confirmedValidator">Password and Confirm Password must be match.</span>
+              </div>
+            </section>
+
             <ion-button expand="block" color="danger" type="submit">Valider</ion-button>
           </ion-list>
         </form>

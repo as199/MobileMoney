@@ -21,6 +21,7 @@ export class ProfilPage implements OnInit {
   id: string;
   infos: any;
   myId: any;
+  modifPass = false;
   constructor(
     private authService: AuthenticationService,
     private fb: FormBuilder,
@@ -195,4 +196,7 @@ export class ProfilPage implements OnInit {
     return this.credentials.get('adresse');
   }
   //#endregion
+  Afficher() {
+    this.modifPass = !this.modifPass;
+  }
 }

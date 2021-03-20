@@ -132,7 +132,7 @@ RedirectMe(role: string){
     return this.http.post(`${this.url}/transactions/delete`, numero).pipe(
       tap(() => {
         this._refresh$.next();
-      }));;
+      }));
   }
 
   findTransactionByCode(code: string): Observable<any>{
@@ -148,7 +148,10 @@ RedirectMe(role: string){
   }
 
   AddAgence(agence: any): Observable<any>{
-    return this.http.post(`${this.url}/agences`,agence);
+    return this.http.post(`${this.url}/agences`,agence).pipe(
+      tap(() => {
+        this._refresh$.next();
+      }));
   }
 
   Verser(data: any): Observable<any>{
@@ -177,7 +180,10 @@ RedirectMe(role: string){
   }
 
   AddUser(user: any): Observable<any>{
-    return this.http.post(`${this.url}/adminSys/utilisateurs`,user);
+    return this.http.post(`${this.url}/adminSys/utilisateurs`,user).pipe(
+      tap(() => {
+        this._refresh$.next();
+      }));
   }
   ResetUser(user: any): Observable<any>{
     return this.http.post(`${this.url}/adminSys/utilisateurs/reset`,user);
@@ -196,7 +202,10 @@ RedirectMe(role: string){
     return this.http.get<any>(`${this.url}/adminSys/utilisateurs`);
   }
   UpdateUser(data: any, id: number): Observable<any>{
-    return this.http.put<any>(`${this.url}/adminSys/utilisateurs/${id}`,data);
+    return this.http.put<any>(`${this.url}/adminSys/utilisateurs/${id}`,data).pipe(
+      tap(() => {
+        this._refresh$.next();
+      }));
   }
 
 
@@ -206,7 +215,10 @@ RedirectMe(role: string){
 
 
   deleteDepot(id: number): Observable<any>{
-    return this.http.delete<any>(`${this.url}/depots/${id}`);
+    return this.http.delete<any>(`${this.url}/depots/${id}`).pipe(
+      tap(() => {
+        this._refresh$.next();
+      }));
   }
 
 }

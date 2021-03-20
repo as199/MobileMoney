@@ -32,9 +32,15 @@
             </div>
           </section>
            <ion-item class="type">
-             <ion-label [color]="etatColor1" (click)="previous()">Bénéficaire</ion-label>
-             <ion-label [color]="etatColor2" (click)="next()" slot="end">Emetteur</ion-label>
-           </ion-item>
+             <ion-segment [value]="etat">
+               <ion-segment-button (click)="previous()" value="beneficiaire">
+                 <ion-label>Bénéficaire</ion-label>
+               </ion-segment-button>
+               <ion-segment-button (click)="next()" value="emetteur">
+                 <ion-label>Emetteur</ion-label>
+               </ion-segment-button>
+             </ion-segment>
+            </ion-item>
            <section *ngIf="parti1 == 1">
              <ion-item>
                <ion-label position="floating">N° CNI</ion-label>
@@ -60,6 +66,9 @@
                <ion-label position="floating">Date D'envoi</ion-label>
                <ion-input type="text" disabled class="form-control" [value]="dateEnvoi"></ion-input>
              </ion-item>
+             <section class="btn">
+               <ion-button shape="round" [disabled]="!credentials.valid" class="suivant" (click)="suivant()"  color="danger" expand="block" type="button">Suivant</ion-button>
+             </section>
            </section>
 
            <section *ngIf="parti2 == 1">
@@ -83,11 +92,12 @@
                <ion-label position="floating">Date D'envoi</ion-label>
                <ion-input type="text" disabled class="form-control" [value]="dateEnvoi"></ion-input>
              </ion-item>
+             <section class="btn">
+               <ion-button shape="round" [disabled]="!credentials.valid" class="suivant" (click)="retirer()"  color="danger" expand="block" type="button">Retirer</ion-button>
+             </section>
            </section>
 
-           <section class="btn">
-             <ion-button shape="round" class="suivant" (click)="retirer()"  color="danger" expand="block" type="button">Retirer</ion-button>
-           </section>
+
          </form>
       </ion-col>
     </ion-row>

@@ -104,7 +104,7 @@
                 <ion-item>
                   <ion-label position="stacked">Affecter à une agence</ion-label>
                   <ion-select formControlName="agences" placeholder="Select One"  interface="popover">
-                    <ion-select-option [value]="agence?.id" *ngFor="let agence of agences">{{agence?.nom}}</ion-select-option>
+                    <ion-select-option [value]="agence.value?.id" *ngFor="let agence of agences | keyvalue">{{agence.value?.nom}}</ion-select-option>
                   </ion-select>
                 </ion-item>
             </ion-list>

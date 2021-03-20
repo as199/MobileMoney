@@ -67,7 +67,9 @@ export class AgencePage implements OnInit {
       message: 'Please wait...'
     });
     await loading.present();
-    this.authService.AddAgence(this.credentials.value).subscribe(async (data) => {
+    this.authService.AddAgence(this.credentials.value).subscribe(
+      async (data) => {
+        console.log(data);
       this.credentials.reset();
       await loading.dismiss();
       const alert = await this.alertCtrl.create({
@@ -77,6 +79,7 @@ export class AgencePage implements OnInit {
       });
     await alert.present();
     },async err => {
+      console.log(err);
       await loading.dismiss();
       const alert = await this.alertCtrl.create({
         header: 'Failed',
@@ -107,6 +110,7 @@ export class AgencePage implements OnInit {
              await loading.present();
             this.authService.DeleteAgence(id).subscribe(
               async (data) => {
+                console.log(data);
                 await loading.dismiss();
                 this.credentials.reset();
                 const alert = await this.alertCtrl.create({
@@ -116,6 +120,7 @@ export class AgencePage implements OnInit {
                 });
               await alert.present();
             }, async(error) => {
+                console.log(error);
                await loading.dismiss();
               const alert = await this.alertCtrl.create({
                 header: 'Failed',
