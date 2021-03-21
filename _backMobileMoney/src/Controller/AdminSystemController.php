@@ -114,7 +114,7 @@ class AdminSystemController extends AbstractController
 
         $this->manager->persist($utilisateur);
         $this->manager->flush();
-        return new JsonResponse(["message"=>"success"],200);
+        return $this->json([$utilisateur],200);
 
 
     }

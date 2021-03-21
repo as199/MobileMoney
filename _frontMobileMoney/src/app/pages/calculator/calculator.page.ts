@@ -33,7 +33,7 @@ export class CalculatorPage implements OnInit {
         const alert = await this.alertCtrl.create({
           header: `Pour la transaction de ${this.credentials.value.montant}, le frais est égal à:`,
           cssClass: 'my-custom-class',
-          message: `${res.data} CFA`,
+          message: `<span class="montant">${res.data} CFA</span>`,
           buttons: ['OK']
         });
         await alert.present();

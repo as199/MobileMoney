@@ -161,8 +161,9 @@ export class DepotPage implements OnInit {
   }
 //#endregion
   async calculFrais(event: KeyboardEvent) {
-     if(this.credentials.value.montant == 0 || this.credentials.value.montant == null){
+     if(this.credentials.value.montant < 0 || this.credentials.value.montant == null){
        this.frais = '';
+       this.credentials.value.montant =null;
        this.montantTotal = ''
      }else {
         this.authService.calculator(this.credentials.value).subscribe(

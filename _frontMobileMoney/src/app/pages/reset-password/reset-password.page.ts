@@ -23,7 +23,6 @@ export class ResetPasswordPage implements OnInit {
   }
 
   async reset() {
-    console.log(this.credentials.value);
     const loading = await this.loadingCtrl.create({
       message: 'Please wait...'
     });
@@ -38,7 +37,6 @@ export class ResetPasswordPage implements OnInit {
       });
       await alert.present();
     }, async err => {
-      console.log(err);
       await loading.dismiss();
       const alert = await this.alertCtrl.create({
         header: 'Success',

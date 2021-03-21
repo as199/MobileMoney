@@ -28,21 +28,35 @@ export class ProfilPage implements OnInit {
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
   ) {
-    this.authService.getId().then((data) =>{
-      this.id = data;
-      this.authService.GetOneUserById(+this.id).subscribe(
-        (data)=>{
-          this.infos = data;
-          this.myId = this.infos['id'];
-          this.image ="data:image/jpeg;base64,"+this.infos['avatar'];
-        },error => {
-          console.log(error);
-        });
-    });
+
   }
 
-  ngOnInit() {
 
+async chargerMesInfos() {
+  const loading = await this.alertCtrl.create({
+    message: 'Please wait...'
+  });
+  await loading.present();
+  this.authService.getId().then((data) => {
+    this.id = data;
+    this.authService.GetOneUserById(+this.id).subscribe(
+      async (data) => {
+        await loading.dismiss();
+        this.infos = data;
+        this.myId = this.infos['id'];
+        this.image = "data:image/jpeg;base64," + this.infos['avatar'];
+      }, error => {
+      });
+  });
+}
+
+
+  ngOnInit() {
+    this.chargerMesInfos();
+    // this.authService.refresh$.subscribe(
+    //   ()=> {
+    //     this.chargerMesInfos();
+    //   });
     this.credentials = this.fb.group({
       prenom: ['', [Validators.required, Validators.minLength(2)]],
       nom: ['', [Validators.required, Validators.minLength(2)]],
@@ -56,6 +70,7 @@ export class ProfilPage implements OnInit {
     });
 
   }
+
   async selectImage(): Promise<any> {
     const  { Camera } = Plugins;
     const result = await Camera.getPhoto({
@@ -74,6 +89,9 @@ export class ProfilPage implements OnInit {
   }
   next(){
     this.visible =false;
+  }
+  Afficher() {
+    this.modifPass = !this.modifPass;
   }
 
 
@@ -96,6 +114,7 @@ export class ProfilPage implements OnInit {
 
     this.authService.UpdateUser(formData, this.myId).subscribe(async (data) => {
       this.credentials.reset();
+      this.infos = data[0];
       await loading.dismiss();
       const alert = await this.alertCtrl.create({
         header: 'Succée',
@@ -105,7 +124,6 @@ export class ProfilPage implements OnInit {
       await alert.present();
 
     },async (err) => {
-      console.log(err);
       await loading.dismiss();
       const alert = await this.alertCtrl.create({
         header: 'Failed',
@@ -146,7 +164,6 @@ export class ProfilPage implements OnInit {
                 });
                 await alert.present();
               }, async(error) => {
-                console.log(error);
 
                 await loading.dismiss();
                 const alert = await this.alertCtrl.create({
@@ -196,7 +213,5 @@ export class ProfilPage implements OnInit {
     return this.credentials.get('adresse');
   }
   //#endregion
-  Afficher() {
-    this.modifPass = !this.modifPass;
-  }
+
 }
