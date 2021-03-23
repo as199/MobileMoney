@@ -9,12 +9,13 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
   styleUrls: ['./versement.page.scss'],
 })
 export class VersementPage implements OnInit {
-visible: boolean = true;
+visible: boolean = false;
   comptes: any;
   credentials: FormGroup;
   depots: any;
   avatar: string;
   lastid: any;
+  myRole='';
   constructor(
     private authService: AuthenticationService,
     private fb: FormBuilder,
@@ -26,23 +27,28 @@ visible: boolean = true;
       this.authService.getMyRole().then((role) => {
         if(role === 'ROLE_AdminSysteme'){
             this.visible = true;
+            this.myRole ='ROLE_AdminSysteme';
            }
       });
     }
   async getComptes(){
-    const loading = await this.loadingCtrl.create({
-      message: 'Please wait...',
+    this.authService.getMyRole().then(async (role) => {
+      if(role === "ROLE_AdminSysteme"){
+        const loading = await this.loadingCtrl.create({
+          message: 'Please wait...',
+        });
+        await loading.present();
+        this.authService.GetCompte().subscribe(
+          async data =>{
+            console.log(data)
+            await loading.dismiss();
+            this.comptes = data["hydra:member"];
+          }
+        );
+      }else{
+        this.comptes= [];
+      }
     });
-    await loading.present();
-  this.authService.GetCompte().subscribe(
-    async data =>{
-      await loading.dismiss();
-      this.comptes = data["hydra:member"];
-      console.log(data);
-
-
-    }
-  );
   }
   previous(){
     this.visible =true;
@@ -52,6 +58,7 @@ visible: boolean = true;
   }
 
   ngOnInit(){
+    console.log("role: ",this.myRole)
    this.getComptes();
     this.chargerDepot();
     this.authService.refresh$.subscribe(
@@ -66,18 +73,19 @@ visible: boolean = true;
       comptes: ['', [Validators.required]],
     });
   }
-
+//#region fonction charger au chargement de la page
   chargerDepot(){
     this.authService.GetDepot().subscribe(
       (data) =>{
         this.depots = data.data;
-        this.lastid = this.depots[0]['numero']
-        console.log(this.depots);
+        this.lastid = this.depots[0]['numero'];
 
       }
     )
   }
+//#endregion
 
+//#region les fonctions pour ajouter et supprimer depots
   async Verser(){
 
     const alert = await this.alertCtrl.create({
@@ -184,5 +192,5 @@ visible: boolean = true;
 
     await alert.present();
   }
-
+//#endregion
 }

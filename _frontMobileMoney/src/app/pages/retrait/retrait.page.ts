@@ -23,7 +23,7 @@ export class RetraitPage implements OnInit {
   nomEmetteur ="";
   nomRecepteur="";
   avatar: string;
-  etat = 'beneficiare';
+  etat = '';
   constructor(
     private authService: AuthenticationService,
     private fb: FormBuilder,
@@ -31,6 +31,7 @@ export class RetraitPage implements OnInit {
     private loadingCtrl: LoadingController
     ) {
       this.myTransaction = {} as Transaction;
+      this.etat = "beneficiaire";
     }
 
   ngOnInit() {

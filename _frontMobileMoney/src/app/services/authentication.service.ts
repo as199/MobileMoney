@@ -20,7 +20,8 @@ token = '';
 myToken='';
 myRole='';
 decoded: any;
- url = 'http://127.0.0.1:8000/api';
+ // url = 'https://samoneyapi.herokuapp.com/api';
+  url = 'http://127.0.0.1:8000/api';
  private _refresh$ = new Subject();
   role: string;
   idUser: any;
@@ -45,7 +46,7 @@ decoded: any;
   }
 
   login(credentials: {username,password}): Observable<any>{
-  return this.http.post('http://127.0.0.1:8000/api/login_check', credentials).pipe(
+  return this.http.post(`${this.url}/login_check`, credentials).pipe(
     map((data: any) => data.token),
     switchMap(token =>{
       // return from(Storage.set({key: TOKEN_KEY, value: token}));
@@ -68,6 +69,7 @@ decoded: any;
     await Storage.set({key: 'telephone', value: from['telephone']});
 
  }
+
  getToken(){
   return this.myToken;
  }
@@ -109,6 +111,7 @@ RedirectMe(role: string){
   calculator(montant: number): Observable<any>{
     return this.http.post(`${this.url}/calculer`, montant);
   }
+
   deCalculator(montant: number): Observable<any>{
     return this.http.post(`${this.url}/decalculer`, montant);
   }
@@ -160,9 +163,11 @@ RedirectMe(role: string){
         this._refresh$.next();
       }));
     }
+
   GetOneUserById(id: number){
     return this.http.get(`${this.url}/adminSys/utilisateurs/${id}`);
   }
+
   DeleteAgence(id: number): Observable<any>{
     return this.http.delete(`${this.url}/agences/${id}`).pipe(
       tap(() => {
@@ -185,9 +190,11 @@ RedirectMe(role: string){
         this._refresh$.next();
       }));
   }
+
   ResetUser(user: any): Observable<any>{
     return this.http.post(`${this.url}/adminSys/utilisateurs/reset`,user);
   }
+
   deleteUser(id: number): Observable<any>{
     return this.http.delete(`${this.url}/adminSys/utilisateurs/${id}`).pipe(
       tap(() => {
@@ -198,9 +205,11 @@ RedirectMe(role: string){
   GetUserNotAgence(): Observable<any>{
     return this.http.get<any>(`${this.url}/adminSys/utilisateurs/users`);
   }
+
   GetAllUsers(): Observable<any>{
     return this.http.get<any>(`${this.url}/adminSys/utilisateurs`);
   }
+
   UpdateUser(data: any, id: number): Observable<any>{
     return this.http.put<any>(`${this.url}/adminSys/utilisateurs/${id}`,data).pipe(
       tap(() => {

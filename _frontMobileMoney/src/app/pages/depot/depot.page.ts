@@ -168,6 +168,7 @@ export class DepotPage implements OnInit {
      }else {
         this.authService.calculator(this.credentials.value).subscribe(
          async (data) => {
+           console.log(data);
            this.frais = data.data;
            this.montantTotal = data.data + this.credentials.value.montant;
          }, async (error) => {

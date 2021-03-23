@@ -5,6 +5,7 @@ import {SafeResourceUrl} from '@angular/platform-browser';
 import {CameraResultType, CameraSource, Plugins} from '@capacitor/core';
 import {AuthenticationService} from '../../services/authentication.service';
 import {ConfirmedValidator} from '../confirmed.validator';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profil',
@@ -13,6 +14,7 @@ import {ConfirmedValidator} from '../confirmed.validator';
 })
 export class ProfilPage implements OnInit {
   visible = true;
+  passchange =false;
   credentials: FormGroup;
   image: SafeResourceUrl;
   myimg: any;
@@ -27,6 +29,7 @@ export class ProfilPage implements OnInit {
     private fb: FormBuilder,
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
+    private router: Router
   ) {
 
   }
@@ -109,13 +112,27 @@ async chargerMesInfos() {
     formData.append('email', this.credentials.value.email);
     if(this.credentials.value.password !== ""){
       formData.append('password', this.credentials.value.password);
+      this.passchange = true;
+      console.log('la val: ',this.passchange);
     }
 
 
     this.authService.UpdateUser(formData, this.myId).subscribe(async (data) => {
+      await loading.dismiss();
+      if (this.passchange){
+        const alert = await this.alertCtrl.create({
+          header: 'Succée',
+          message: 'Utilisateur ajouter avec succée',
+          buttons: ['OK']
+        });
+        await alert.present().then(async ()=>{
+          await this.authService.logout();
+          await this.router.navigateByUrl('/');
+        });
+        console.log('save');
+      }
       this.credentials.reset();
       this.infos = data[0];
-      await loading.dismiss();
       const alert = await this.alertCtrl.create({
         header: 'Succée',
         message: 'Utilisateur ajouter avec succée',

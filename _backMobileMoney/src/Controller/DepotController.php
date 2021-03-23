@@ -81,7 +81,7 @@ class DepotController extends AbstractController
         $depot = $this->serializer->denormalize($infos, Depot::class);
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if(isset($infos['comptes'])){
+        if(isset($infos['comptes']) && $infos['comptes']!==""){
             $compte = $this->compteRepository->findOneBy(['id' =>$infos['comptes']]);
 
         }else{

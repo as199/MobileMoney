@@ -43,6 +43,7 @@ export class AgencePage implements OnInit {
 
   }
 
+//#region les fonctions de chargement au demarrage
   chargerUser(){
     this.authService.GetUserNotAgence().subscribe((data) => {
      this.users = data.data;
@@ -54,14 +55,18 @@ export class AgencePage implements OnInit {
      this.agence= data;
     });
   }
+//#endregion
 
+//#region partie des navigations
   previous(){
     this.visible =true;
   }
   next(){
     this.visible =false;
   }
+//#endregion
 
+//#region les fonction pour l'ajout et la suppression d'une agence
   async Ajouter(){
     const loading = await this.loadingCtrl.create({
       message: 'Please wait...'
@@ -137,5 +142,5 @@ export class AgencePage implements OnInit {
 
     await alert.present();
   }
-
+//#endregion
 }

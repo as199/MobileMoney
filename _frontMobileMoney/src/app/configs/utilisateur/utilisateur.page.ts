@@ -50,6 +50,8 @@ export class UtilisateurPage implements OnInit {
 
 
   }
+
+//#region Gestion de l'image de l'utilisateur
   async selectImage(): Promise<any> {
   const  { Camera } = Plugins;
   const result = await Camera.getPhoto({
@@ -62,27 +64,33 @@ export class UtilisateurPage implements OnInit {
   this.myimg = result.base64String;
   //this.domsanitizer.bypassSecurityTrustResourceUrl(result && result.base64String);
  }
+//#endregion
 
+ //#region la nivigation entre les deux partie
   previous(){
     this.visible =true;
   }
   next(){
     this.visible =false;
   }
+
+//#endregion
+
+//#region charger les infos necessaire au chargement
   chargerAgence(){
     this.authService.GetAgence().subscribe((data) => {
       this.agences = data;
-      console.log(this.agences);
     });
   }
 
   chargerUser(){
     this.authService.GetAllUsers().subscribe((data) => {
-      console.log(data);
       this.users = data.data;
     });
   }
+//#endregion
 
+//#region les fonctions qui sont appeller pour l'ajout et la suppression d'un utilisateur
   async Ajouter(){
     const loading = await this.loadingCtrl.create({
       message: 'Please wait...'
@@ -101,6 +109,7 @@ export class UtilisateurPage implements OnInit {
     formData.append('password', 'pass123');
 
     this.authService.AddUser(formData).subscribe(async (data) => {
+      console.log(data);
       this.credentials.reset();
       await loading.dismiss();
       const alert = await this.alertCtrl.create({
@@ -110,7 +119,8 @@ export class UtilisateurPage implements OnInit {
       });
     await alert.present();
 
-    },async err => {
+    },async (err) => {
+      console.log(err);
       await loading.dismiss();
       const alert = await this.alertCtrl.create({
         header: 'Failed',
@@ -134,7 +144,6 @@ export class UtilisateurPage implements OnInit {
           role: 'cancel',
           cssClass: 'secondary',
           handler: () => {
-            console.log('Confirm Cancel');
           }
         }, {
           text: 'Ok',
@@ -152,7 +161,6 @@ export class UtilisateurPage implements OnInit {
                 });
               await alert.present();
             }, async(error) => {
-              console.log(error);
 
               await loading.dismiss();
               const alert = await this.alertCtrl.create({
@@ -170,6 +178,8 @@ export class UtilisateurPage implements OnInit {
 
     await alert.present();
   }
+//#endregion
+
   //#region parti des getters
   get email() {
     return this.credentials.get('email');
